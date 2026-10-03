@@ -1,26 +1,583 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
 
 :root {
+  /* ============================================
+     Brand
+     ============================================ */
+
+  --brand-primary: #087a5b;
+  --brand-primary-light: #15966f;
+  --brand-primary-dark: #066349;
+  --brand-primary-darker: #044c3d;
+
+  --brand-forest: #064c3f;
+  --brand-charcoal: #152b35;
+
+
+  /* ============================================
+     Base
+     ============================================ */
+
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #152b35;
+
+
+  /* ============================================
+     Surfaces
+     ============================================ */
+
+  --card: #ffffff;
+  --card-foreground: #152b35;
+
+  --popover: #ffffff;
+  --popover-foreground: #152b35;
+
+
+  /* ============================================
+     Semantic Colors
+     ============================================ */
+
+  --primary: var(--brand-primary);
+  --primary-foreground: #ffffff;
+
+  --secondary: #eaf4ee;
+  --secondary-foreground: var(--brand-primary-dark);
+
+  --muted: #f5f9f6;
+  --muted-foreground: #536b7d;
+
+  --accent: #edf7f1;
+  --accent-foreground: var(--brand-primary-dark);
+
+  --destructive: #d33b4b;
+  --destructive-foreground: #ffffff;
+
+
+  /* ============================================
+     Borders & Inputs
+     ============================================ */
+
+  --border: #dceae3;
+  --input: #dceae3;
+  --ring: var(--brand-primary-light);
+
+
+  /* ============================================
+     Typography
+     ============================================ */
+
+  --text-heading: #172d3b;
+  --text-body: #536b7d;
+  --text-muted: #899da8;
+  --text-subtle: #afbfbe;
+  --text-inverse: #ffffff;
+
+
+  /* ============================================
+     Status
+     ============================================ */
+
+  --status-ongoing: #087a5b;
+  --status-ongoing-bg: #e8f4ee;
+
+  --status-postponed: #a86d12;
+  --status-postponed-bg: #fff5df;
+
+  --status-completed: #16834a;
+  --status-completed-bg: #e7f6ec;
+
+  --status-urgent: #d33b4b;
+  --status-urgent-bg: #fff0f1;
+
+
+  /* ============================================
+     Footer / Dark Surfaces
+     ============================================ */
+
+  --footer: #082f2b;
+  --footer-surface: #0b4037;
+  --footer-border: #23564b;
+
+
+  /* ============================================
+     Charts
+     ============================================ */
+
+  --chart-1: #087a5b;
+  --chart-2: #15966f;
+  --chart-3: #066349;
+  --chart-4: #064c3f;
+  --chart-5: #536b7d;
+
+
+  /* ============================================
+     Sidebar
+     ============================================ */
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #152b35;
+
+  --sidebar-primary: var(--brand-primary);
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #eaf4ee;
+  --sidebar-accent-foreground: var(--brand-primary-dark);
+
+  --sidebar-border: #dceae3;
+  --sidebar-ring: var(--brand-primary-light);
+
+
+  /* ============================================
+     Radius
+     ============================================ */
+
+  --radius: 0.625rem;
+}
+
+.dark {
+  /* ============================================
+     Base
+     ============================================ */
+
+  --background: #071f1c;
+  --foreground: #f4faf7;
+
+
+  /* ============================================
+     Surfaces
+     ============================================ */
+
+  --card: #0b2f2a;
+  --card-foreground: #f4faf7;
+
+  --popover: #0b2f2a;
+  --popover-foreground: #f4faf7;
+
+
+  /* ============================================
+     Semantic Colors
+     ============================================ */
+
+  --primary: #15966f;
+  --primary-foreground: #ffffff;
+
+  --secondary: #123e36;
+  --secondary-foreground: #dff5eb;
+
+  --muted: #10362f;
+  --muted-foreground: #a9c1ba;
+
+  --accent: #123e36;
+  --accent-foreground: #dff5eb;
+
+  --destructive: #e45a68;
+  --destructive-foreground: #ffffff;
+
+
+  /* ============================================
+     Borders & Inputs
+     ============================================ */
+
+  --border: #23564b;
+  --input: #23564b;
+  --ring: #15966f;
+
+
+  /* ============================================
+     Typography
+     ============================================ */
+
+  --text-heading: #f4faf7;
+  --text-body: #b9cec8;
+  --text-muted: #8fa9a1;
+  --text-subtle: #6f8c83;
+  --text-inverse: #071f1c;
+
+
+  /* ============================================
+     Status
+     ============================================ */
+
+  --status-ongoing: #15966f;
+  --status-ongoing-bg: #103d35;
+
+  --status-postponed: #d59a3a;
+  --status-postponed-bg: #40321b;
+
+  --status-completed: #3caf70;
+  --status-completed-bg: #123d2b;
+
+  --status-urgent: #e45a68;
+  --status-urgent-bg: #421f25;
+
+
+  /* ============================================
+     Sidebar
+     ============================================ */
+
+  --sidebar: #0b2f2a;
+  --sidebar-foreground: #f4faf7;
+
+  --sidebar-primary: #15966f;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #123e36;
+  --sidebar-accent-foreground: #dff5eb;
+
+  --sidebar-border: #23564b;
+  --sidebar-ring: #15966f;
+
+
+  /* ============================================
+     Charts
+     ============================================ */
+
+  --chart-1: #15966f;
+  --chart-2: #43b98f;
+  --chart-3: #066349;
+  --chart-4: #3c8070;
+  --chart-5: #8fa9a1;
 }
 
 @theme inline {
+  /* ============================================
+     Brand
+     ============================================ */
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+
+  /* ============================================
+     Base
+     ============================================ */
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+
+  /* ============================================
+     Borders
+     ============================================ */
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+
+  /* ============================================
+     Brand Helpers
+     ============================================ */
+
+  --color-emerald: var(--brand-primary);
+  --color-emerald-light: var(--brand-primary-light);
+  --color-emerald-dark: var(--brand-primary-dark);
+  --color-emerald-darker: var(--brand-primary-darker);
+
+  --color-forest: var(--brand-forest);
+  --color-charcoal: var(--brand-charcoal);
+
+
+  /* ============================================
+     Typography
+     ============================================ */
+
+  --color-text-heading: var(--text-heading);
+  --color-text-body: var(--text-body);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-text-inverse: var(--text-inverse);
+
+
+  /* ============================================
+     Status
+     ============================================ */
+
+  --color-status-ongoing: var(--status-ongoing);
+  --color-status-ongoing-bg: var(--status-ongoing-bg);
+
+  --color-status-postponed: var(--status-postponed);
+  --color-status-postponed-bg: var(--status-postponed-bg);
+
+  --color-status-completed: var(--status-completed);
+  --color-status-completed-bg: var(--status-completed-bg);
+
+  --color-status-urgent: var(--status-urgent);
+  --color-status-urgent-bg: var(--status-urgent-bg);
+
+
+  /* ============================================
+     Footer
+     ============================================ */
+
+  --color-footer: var(--footer);
+  --color-footer-surface: var(--footer-surface);
+  --color-footer-border: var(--footer-border);
+
+
+  /* ============================================
+     Charts
+     ============================================ */
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+
+  /* ============================================
+     Sidebar
+     ============================================ */
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+
+  /* ============================================
+     Radius
+     ============================================ */
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+
+  /* ============================================
+     Typography
+     ============================================ */
+
+  --font-sans: "Cairo", "Inter", sans-serif;
+  --font-heading: "Cairo", "Inter", sans-serif;
+  --font-body: "Cairo", "Inter", sans-serif;
+
+
+  /* ============================================
+     Breakpoints
+     ============================================ */
+
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  .container {
+    @apply mx-auto px-5
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--color-text-body);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    @apply bg-background text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    color: var(--color-text-heading);
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1.05rem;
+  }
+
+  p {
+    max-width: 70ch;
+    color: var(--color-text-body);
+    font-size: var(--text-sm);
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--brand-primary-dark);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans scroll-smooth;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================
+   3. Flex Utility Layer
+   e.g. <div class="flex-center"> = flex + items-center + justify-center
+   ============================================ */
+@layer components {
+  .section {
+    padding: 4rem 0;
+    margin: 3rem 0;
+    position: relative;
+    scroll-margin-top: 6.25rem;
+  }
+
+  .card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 0.32rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .badge-ongoing {
+    color: var(--color-status-ongoing);
+    background-color: var(--color-status-ongoing-bg);
+  }
+
+  .badge-postponed {
+    color: var(--color-status-postponed);
+    background-color: var(--color-status-postponed-bg);
+  }
+
+  .badge-closed {
+    color: var(--color-status-closed);
+    background-color: var(--color-status-closed-bg);
+  }
+
+  .badge-urgent {
+    color: var(--color-status-urgent);
+    background-color: var(--color-status-urgent-bg);
+  }
+
+  /* --- Row (default direction) --- */
+  .flex-center {
+    @apply flex flex-row items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex flex-row items-center justify-between;
+  }
+
+  .flex-start {
+    @apply flex flex-row items-center justify-start;
+  }
+
+  .flex-end {
+    @apply flex flex-row items-center justify-end;
+  }
+
+  .flex-around {
+    @apply flex flex-row items-center justify-around;
+  }
+
+  .flex-evenly {
+    @apply flex flex-row items-center justify-evenly;
+  }
+
+  /* --- Column --- */
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .flex-col-between {
+    @apply flex flex-col items-center justify-between;
+  }
+
+  .flex-col-start {
+    @apply flex flex-col items-start justify-start;
+  }
+
+  .flex-col-end {
+    @apply flex flex-col items-center justify-end;
+  }
+
+  /* --- Top/stretch align variants (useful for cards/forms) --- */
+  .flex-top-between {
+    @apply flex flex-row items-start justify-between;
+  }
+
+  .flex-stretch {
+    @apply flex flex-row items-stretch justify-start;
+  }
+
+  /* --- Inline/no-center helpers --- */
+  .flex-row {
+    @apply flex flex-row;
+  }
+
+  .flex-col {
+    @apply flex flex-col;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
