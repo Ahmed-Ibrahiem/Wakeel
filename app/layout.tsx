@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import ScrollToTop from "@/components/layout/ScrollToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <link rel="shortcut icon" href="/logo.svg" type="image/x-icon" />
       </head>
-      <body className="">
-        <Header />
-        {children}
-        <Footer />
-        <ScrollToTop />
-      </body>
+      <body className="">{children}</body>
     </html>
   );
 }
