@@ -8,27 +8,27 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary — الزرار الأساسي
+        // Primary
         default:
           "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/95 cursor-pointer ",
 
-        // Secondary — الزرار الثانوي
+        // Secondary
         secondary:
           "border border-primary/25 bg-background text-primary hover:border-primary/50 hover:bg-primary/5 active:bg-primary/10 cursor-pointer",
 
-        // Outline — زرار بإطار محايد
+        // Outline
         outline:
           "border-border bg-background text-foreground hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
 
-        // Ghost — زرار بدون خلفية
+        // Ghost
         ghost:
           "text-foreground hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
 
-        // Destructive — العمليات الخطرة
+        // Destructive
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:ring-destructive/20",
 
-        // Link — شكل رابط
+        // Link
         link: "h-auto rounded-none p-0 text-primary underline-offset-4 hover:underline",
       },
 

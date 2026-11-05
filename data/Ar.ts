@@ -238,3 +238,90 @@ export const homePage = {
     copyright: "© وكيل، جميع الحقوق محفوظة.",
   },
 };
+
+export const loginPage = {
+  login_panel: {
+    title: "شريكك في إدارة ",
+    heighLight: "قضاياك القانونية",
+    desc: "منصة وكيل تساعدك علي متابعة قضاياك وجلساتك وإدارة أعمالك القانونية بكل سهولة وإحترافية.",
+    items: [
+      {
+        iconName: "FaRegFileAlt",
+        title: "إدارة شاملة",
+        desc: "لكل قضاياك",
+      },
+      {
+        iconName: "BsLightningCharge",
+        title: "سهولة الإستخدام",
+        desc: "في كل وقت",
+      },
+      {
+        iconName: "LuShieldCheck",
+        title: "أمان عالي",
+        desc: "لحماية بياناتك",
+      },
+    ],
+  },
+  login_form: {
+    has_no_account: {
+      label: "ليس لديك حساب؟",
+      href_title: "إنشاء حساب جديد",
+    },
+
+    form: {
+      title: "مرحبا بعودتك",
+      desc: "سجل دخولك للمتابعة وجدولة الجلسات وإدارة القضايا.",
+      email: "البريد الإلكتروني",
+      password: "كلمة المرور",
+      remember_me: "تذكرني",
+      forgot_password: "نسيت كلمة المرور؟",
+      login: "تسجيل دخول",
+      login_with_password: "متابعة بإستخدام جوجل",
+    },
+  },
+};
+
+export const registerPageData = {
+  registerPanel: {
+    title: "إبدأ رحلتك مع وكيل بخطوة واحدة",
+    heighLightS: ["إبدأ", "رحلتك", "واحدة"],
+    desc: "أنشئ حسابك الأن واستفد من جميع المزايا التي تساعدك في إدارة قضاياك وجلساتك بكل سهولة وإحترافية.",
+    items: [
+      {
+        iconName: "FaRegFolder",
+        title: "إدارة القضايا",
+        desc: "تابع جميع قضاياك في مكان واحد.",
+      },
+      {
+        iconName: "FaRegCalendar",
+        title: "مواعيد الجلسات",
+        desc: "احصل علي تنبيهات بالمواعيد المهمة.",
+      },
+      {
+        iconName: "MdInsertChartOutlined",
+        title: "تقارير شاملة",
+        desc: "متابعة دقيقة لكل التفاصيل.",
+      },
+    ],
+  },
+
+  register_form: {
+    has_account: {
+      label: "لديك حساب بالفعل؟",
+      href_title: "تسجيل دخول الأن",
+    },
+
+    form: {
+      title: "إنشاء حساب جديد",
+      desc: "إملئ البيانات التالية لإنشاء حسابك في وكيل.",
+      name: "الإسم بالكامل",
+      email: "البريد الإلكتروني",
+      password: "كلمة المرور",
+      confirmPassword: "تأكيد كلمة المرور",
+      remember_me: "تذكرني",
+      forgot_password: "نسيت كلمة المرور؟",
+      login: "تسجيل دخول",
+      login_with_password: "متابعة بإستخدام جوجل",
+    },
+  },
+};

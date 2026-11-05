@@ -6,7 +6,7 @@ Check each story off once it's fully built and working.
 
 - [ ] **As a** lawyer, **I want to** create an account quickly, **so that** I can start using the system without friction.
 - [ ] **As a** lawyer, **I want to** log in to access my data, **so that** my account stays protected and private.
-- [ ] **As a** lawyer, **I want to** reset my password if I forget it, **so that** I'm not permanently locked out of my own data.
+- [ ] **As a** lawyer, **I want to** reset my password if I forgot it, **so that** I'm not permanently locked out of my own data.
 - [ ] **As a** lawyer, **I want to** log out safely, **so that** my data stays protected if I'm using a shared or public device.
 
 ## 2. Landing Page

@@ -1,0 +1,146 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "9957d393-008d-46da-a2d4-b38c5c3bd013",
+  "prevIds": [
+    "a28d4497-4229-43ad-91de-acbcbde79183"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "action_rate_limits"
+      ],
+      "writes": [
+        "s|tbl|public.action_rate_limits",
+        "n|tbl|public.action_rate_limits",
+        "e|tbl|public.action_rate_limits",
+        "n|rel|public.action_rate_limits",
+        "n|type|public.action_rate_limits",
+        "n|rel|public.action_rate_limits_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "action_rate_limits",
+        "action_rate_limits_expires_idx"
+      ],
+      "writes": [
+        "s|idx|public.action_rate_limits_expires_idx",
+        "n|idx|public.action_rate_limits_expires_idx",
+        "e|idx|public.action_rate_limits_expires_idx",
+        "n|rel|public.action_rate_limits_expires_idx"
+      ],
+      "reads": [
+        "n|tbl|public.action_rate_limits",
+        "n|sch|public",
+        "n|col|public.action_rate_limits.expires_at"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "action_rate_limits",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "action_rate_limits",
+        "name": "key",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "action_rate_limits",
+        "name": "count",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "1",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "action_rate_limits",
+        "name": "expires_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "action_rate_limits",
+        "name": "action_rate_limits_expires_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "expires_at",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "action_rate_limits",
+        "name": "action_rate_limits_pkey",
+        "columns": [
+          "key"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    }
+  ]
+}
