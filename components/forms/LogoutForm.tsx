@@ -31,7 +31,10 @@ const LogoutForm = () => {
   };
 
   return (
-    <Button className="flex-center gap-2.5 w-25" onClick={handleSignout}>
+    <Button
+      className="flex-center gap-2.5 w-25 hover:bg-white hover:text-primary! text-[16px]"
+      onClick={handleSignout}
+    >
       {loading ? (
         <TbLoader2 className="animate-spin" />
       ) : (
