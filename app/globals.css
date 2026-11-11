@@ -486,7 +486,7 @@
     border: 1px solid var(--color-border);
     border-radius: 0.32rem;
     padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 0 3px #ccc;
     display: flex;
     align-items: center;
     justify-content: center;

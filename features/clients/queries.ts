@@ -1,9 +1,20 @@
 import "server-only";
 import { requireSession } from "@/lib/session";
 import { clientsListSchema } from "./schemas";
-import { and, count, eq, ilike, isNull, or, asc, SQL } from "drizzle-orm";
+import {
+  and,
+  count,
+  eq,
+  ilike,
+  isNotNull,
+  isNull,
+  or,
+  asc,
+  SQL,
+} from "drizzle-orm";
 import { clients } from "@/db/schema";
 import { db } from "@/db";
+import * as z from "zod";
 
 type RawParams = Record<string, string | string[] | undefined>;
 
@@ -15,15 +26,16 @@ const escapeLike = (s: string) => s.replace(/[\\%_]/g, "\\$&");
 export const clientsList = async (raw: RawParams) => {
   const { user } = await requireSession();
 
-  const { q, page, pageSize } = clientsListSchema.parse({
+  const { q, page, pageSize, archived } = clientsListSchema.parse({
     q: first(raw.q),
     page: first(raw.page),
     pageSize: first(raw.pageSize),
+    archived: first(raw.archived),
   });
 
   const conditions: SQL[] = [
     eq(clients.userId, user.id),
-    isNull(clients.archivedAt),
+    archived ? isNotNull(clients.archivedAt) : isNull(clients.archivedAt),
   ];
 
   if (q) {
@@ -51,5 +63,19 @@ export const clientsList = async (raw: RawParams) => {
     .limit(pageSize)
     .offset((currentPage - 1) * pageSize);
 
-  return { items, page: currentPage, totalPages, pageSize, total , q };
+  return { items, page: currentPage, totalPages, pageSize, total, q, archived };
 };
+
+export async function getClient(id: string) {
+  const { user } = await requireSession();
+
+  // A valid id will cause Postgres to throw an error, so we reject it before the query
+  if (!z.uuid().safeParse(id).success) return null;
+
+  const [row] = await db
+    .select()
+    .from(clients)
+    .where(and(eq(clients.id, id), eq(clients.userId, user.id)));
+
+  return row ?? null;
+}

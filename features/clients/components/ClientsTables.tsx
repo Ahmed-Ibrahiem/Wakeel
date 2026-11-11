@@ -9,8 +9,18 @@ import {
 import { InitialsAvatar } from "@/components/shared/InitialsAvatar";
 import { formatPhone } from "@/lib/phone";
 import type { Client } from "@/db/schema";
+import Link from "next/link";
+import { Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ClientRowActions } from "@/features/clients/components/ClientRowActions";
 
-export function ClientsTable({ clients }: { clients: Client[] }) {
+export function ClientsTable({
+  clients,
+  archived,
+}: {
+  clients: Client[];
+  archived: boolean;
+}) {
   return (
     <div className="h-117 overflow-y-auto">
       <Table>
@@ -21,6 +31,7 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
             <TableHead className="hidden md:table-cell">
               تاريخ أول تعامل
             </TableHead>
+            <TableHead className="">إجراءات</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -40,6 +51,28 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
                 className="hidden text-right tabular-nums md:table-cell"
               >
                 {c.firstContactDate}
+              </TableCell>
+              <TableCell>
+                <div className="flex-start gap-1">
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="w-8 h-8 rounded-sm! border!"
+                  >
+                    <Link
+                      href={`/dashboard/clients/${c.id}/edit`}
+                      aria-label={`تعديل ${c.fullName}`}
+                    >
+                      <Pencil className="size-4" />
+                    </Link>
+                  </Button>
+                  <ClientRowActions
+                    archived={archived}
+                    id={c.id}
+                    name={c.fullName}
+                  />
+                </div>
               </TableCell>
             </TableRow>
           ))}

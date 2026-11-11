@@ -40,7 +40,7 @@ export function ClientsSearch({ q }: { q: string }) {
   return (
     <form
       role="search"
-      className="relative max-w-sm"
+      className="relative w-sm max-w-sm"
       onSubmit={(e) => {
         e.preventDefault();
         clearTimeout(timer.current);
@@ -57,7 +57,7 @@ export function ClientsSearch({ q }: { q: string }) {
         autoComplete="off"
         placeholder="ابحث بالاسم أو رقم الهاتف..."
         aria-label="بحث في العملاء"
-        className="p-2 ps-8! rounded-sm!"
+        className="p-2 ps-8! rounded-sm! text-sm"
         onChange={(e) => {
           clearTimeout(timer.current);
           const value = e.target.value;
