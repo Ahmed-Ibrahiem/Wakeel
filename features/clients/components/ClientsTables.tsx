@@ -1,0 +1,83 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { InitialsAvatar } from "@/components/shared/InitialsAvatar";
+import { formatPhone } from "@/lib/phone";
+import type { Client } from "@/db/schema";
+import Link from "next/link";
+import { Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ClientRowActions } from "@/features/clients/components/ClientRowActions";
+
+export function ClientsTable({
+  clients,
+  archived,
+}: {
+  clients: Client[];
+  archived: boolean;
+}) {
+  return (
+    <div className="h-117 overflow-y-auto">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-accent hover:bg-accent! border-1 border-border rounded-sm!">
+            <TableHead>الاسم</TableHead>
+            <TableHead>رقم الهاتف</TableHead>
+            <TableHead className="hidden md:table-cell">
+              تاريخ أول تعامل
+            </TableHead>
+            <TableHead className="">إجراءات</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {clients.map((c) => (
+            <TableRow key={c.id}>
+              <TableCell>
+                <div className="flex items-center gap-3">
+                  <InitialsAvatar name={c.fullName} />
+                  <span className="font-medium">{c.fullName}</span>
+                </div>
+              </TableCell>
+              <TableCell dir="ltr" className="text-right tabular-nums">
+                {formatPhone(c.phone)}
+              </TableCell>
+              <TableCell
+                dir="ltr"
+                className="hidden text-right tabular-nums md:table-cell"
+              >
+                {c.firstContactDate}
+              </TableCell>
+              <TableCell>
+                <div className="flex-start gap-1">
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="w-8 h-8 rounded-sm! border!"
+                  >
+                    <Link
+                      href={`/dashboard/clients/${c.id}/edit`}
+                      aria-label={`تعديل ${c.fullName}`}
+                    >
+                      <Pencil className="size-4" />
+                    </Link>
+                  </Button>
+                  <ClientRowActions
+                    archived={archived}
+                    id={c.id}
+                    name={c.fullName}
+                  />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}

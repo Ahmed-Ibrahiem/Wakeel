@@ -42,6 +42,7 @@ const LoginForm = () => {
     } catch (e) {
       const error = e as Error;
       toast.error(error.message || "Unknown Error");
+    } finally {
       setLoading(false);
     }
   };
