@@ -17,10 +17,10 @@ PostgreSQL on Neon, accessed with Drizzle ORM. Schema files live in `db/schema/`
 user (Better Auth)                        [x]
   ├── session, account, verification      [x]  managed by Better Auth
   ├── user_settings                       [x]
-  └── clients                             [ ]
-        └── cases                         [ ]
-              ├── hearings                [ ]
-              ├── deadlines               [ ]
+  └── clients                             [x]
+        └── cases                         [x]
+              ├── hearings                [ ]  next
+              ├── deadlines               [ ]  draft
               ├── payments                [ ]  v1.1
               └── documents               [ ]  v1.2
 
@@ -40,8 +40,8 @@ Every app table (clients, cases, hearings, deadlines, payments, documents) carri
 - **Calendar dates** (no time of day) use `date` and are read as strings (`"2026-11-05"`), so they never shift a day because of a time zone.
 - **Naming:** `snake_case` in the database, `camelCase` in TypeScript.
 - **Ownership is enforced twice.** Every app table has `user_id`, and a child table references its parent with a composite foreign key `(parent_id, user_id)`. A case can therefore never point at another lawyer's client, even if the application code has a bug. Queries must still filter by the `user_id` of the current session.
-- **Deletes:** deleting a user cascades to everything they own. Between app tables there is no cascade (`NO ACTION`), so a client that still has cases cannot be deleted. Use `archived_at` instead.
-- **Enums** for fixed sets of values. Adding a value is easy, removing or renaming one is a painful migration, so values are chosen carefully.
+- **Deletes:** deleting a user cascades to everything they own. Between app tables there is no cascade (`NO ACTION`), so a client that still has cases cannot be deleted, and the same will apply to a case with hearings or deadlines. Use `archived_at` instead.
+- **Enums** for fixed sets of values. Adding a value is easy, removing or renaming one is a painful migration, so values are chosen carefully. Created so far: `case_type`, `case_status`. The hearing and deadline enums come with their features.
 - **Nothing that can be calculated is stored** (see the list at the end).
 
 ---
@@ -78,7 +78,7 @@ The password hash lives in `account.password`, never in `user`.
 | timezone              | text                  | IANA name, default `Africa/Cairo`         |
 | updated_at            | timestamptz           |                                           |
 
-Created by a `user.create` hook. `getUserSettings()` creates the row with defaults if it is missing, because the HTTP driver has no transactions and the hook could fail after the user was created.
+Created by a `user.create` hook. `getUserSettings()` creates the row with defaults if it is missing, because the HTTP driver has no transactions and the hook could fail after the user was created. In TypeScript the field is `timeZone`.
 
 The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only make sense in the lawyer's own time.
 
@@ -94,7 +94,7 @@ The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only
 
 ---
 
-## 4. clients
+## 4. clients [x]
 
 | Column                 | Type              | Notes                                                     |
 | ---------------------- | ----------------- | --------------------------------------------------------- |
@@ -110,43 +110,45 @@ The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only
 
 Constraints and indexes: `unique(id, user_id)` (needed by the composite foreign keys in child tables), index `(user_id, full_name)`, index `(user_id, archived_at)`.
 
-**Calculated, not stored:** number of cases, latest case, and client status (**active** when they have at least one open case, **inactive** otherwise).
+**Calculated, not stored:** number of cases (a subquery in the list query, counting archived cases too), latest case, and client status (**active** when they have at least one open case, **inactive** otherwise). The case count is built; latest case and active/inactive are not yet.
 
-**Deleting:** only possible when the client has no cases (the database enforces it). Otherwise the client is archived.
+**Deleting:** only possible when the client has no cases (the database enforces it with a foreign key error, code `23503`, translated to a friendly message). Otherwise the client is archived.
 
 ---
 
-## 5. cases
+## 5. cases [x]
 
 | Column                 | Type              | Notes                                                                   |
 | ---------------------- | ----------------- | ----------------------------------------------------------------------- |
 | id                     | uuid PK           |                                                                         |
-| user_id                | text FK → user.id | owner                                                                   |
-| client_id              | uuid              | composite FK `(client_id, user_id)` → clients                           |
-| case_number            | text              | for example `125/2024`, **not unique** (see notes)                      |
+| user_id                | text FK → user.id | owner, cascade on user delete                                           |
+| client_id              | uuid              | composite FK `(client_id, user_id)` → clients (`cases_client_owner_fk`) |
+| case_number            | text              | required, for example `125/2024`, **not unique** (see notes)            |
 | case_type              | enum              | `civil` \| `criminal` \| `commercial` \| `family` \| `labor` \| `other` |
-| court_name             | text              |                                                                         |
+| court_name             | text              | required                                                                |
 | opposing_party         | text              | optional                                                                |
 | status                 | enum              | `ongoing` \| `postponed` \| `closed`, default `ongoing`                 |
 | judgment_date          | date              | optional                                                                |
-| notes                  | text              | general notes about the case                                            |
-| archived_at            | timestamptz       |                                                                         |
+| notes                  | text              | optional, general notes about the case                                  |
+| archived_at            | timestamptz       | null while active                                                       |
 | created_at, updated_at | timestamptz       | `updated_at` drives "recently updated cases"                            |
 
-Constraints and indexes: `unique(id, user_id)`, `(user_id, client_id)`, `(user_id, status)`, `(user_id, case_number)`, `(user_id, updated_at)`.
+Constraints and indexes: `unique(id, user_id)` (named `cases_id_user_unique`), `(user_id, client_id)`, `(user_id, status)`, `(user_id, case_number)`, `(user_id, updated_at)`.
 
-**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing".
+**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing". None of these are built yet; they arrive with hearings and deadlines.
+
+**Deleting:** a case can be deleted only when it has no hearings or deadlines. The composite foreign keys from those tables have no cascade, so the database refuses (code `23503`) and the app shows a friendly message. Otherwise the case is archived.
 
 **Notes**
 
-- `case_number` is not unique: the same number can exist in two different courts, and an appeal can carry the same number as the original case. The form warns about duplicates instead of blocking them.
+- `case_number` is not unique: the same number can exist in two different courts, and an appeal can carry the same number as the original case. The form asks for confirmation on a duplicate number (an application-level check, not a database constraint, so it only warns).
 - The old `won` / `lost` statuses are gone. A judgment is recorded with `judgment_date`, and appeal dates live in `deadlines`.
 - `updated_at` must be touched whenever a hearing, deadline or note changes. This is done in application code, in the same batch as the change.
 - Fee columns (`agreed_fee`, `currency`) arrive with v1.1.
 
 ---
 
-## 6. hearings
+## 6. hearings (next)
 
 | Column                 | Type              | Notes                                         |
 | ---------------------- | ----------------- | --------------------------------------------- |
@@ -167,13 +169,14 @@ Indexes: `(user_id, hearing_at)` for the dashboard, reminders and conflict check
 
 **Notes**
 
+- The composite FK to `cases` has **no cascade** (default `NO ACTION`), so a case with hearings cannot be deleted.
 - **Postponing** a hearing means: mark the old one `postponed` and create a new `scheduled` one. Recording the outcome and the next date happens in a single step in the UI.
 - When `hearing_at` changes, both `reminder_*_sent_at` columns are reset to null, otherwise a reminder already sent for the old date would block the new one.
 - **Conflict check** (application code, not a database constraint): other `scheduled` hearings of the same lawyer within a time window around the new `hearing_at`. Location-based checks ("same day but far apart") come later.
 
 ---
 
-## 7. deadlines
+## 7. deadlines (draft)
 
 Non-hearing dates, such as the last day to file an appeal or a defense memo.
 
@@ -191,6 +194,8 @@ Non-hearing dates, such as the last day to file an appeal or a defense memo.
 | created_at, updated_at | timestamptz       |                                           |
 
 Indexes: `(user_id, due_date)` and `(case_id)`.
+
+The composite FK to `cases` has **no cascade**, same as hearings.
 
 "Overdue" is calculated: `pending` and `due_date` earlier than today in the lawyer's time zone.
 
@@ -258,10 +263,11 @@ Files stay in private storage and are opened through short-lived signed links, g
 - Reminder booleans became timestamps.
 - Documents use `storage_key` in private storage instead of a public `file_url`.
 - Payments redefined with due dates, and the agreed fee moved onto the case.
-- Hard delete of a client with cases is blocked, archiving was added.
+- Hard delete of a client with cases (or a case with hearings/deadlines) is blocked, archiving was added.
 
 ## Open questions
 
+- **Cases of an archived client:** should they stay in the cases list (current behaviour) or be hidden?
 - **Payments:** is a partial payment of one instalment needed? Are court expenses tracked differently from fees?
 - **What does "postponed" mean to lawyers** as a case status, given that hearings are postponed routinely? Ask them.
 - **Case types:** is the list complete (administrative cases, for example)?

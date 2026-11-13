@@ -107,7 +107,7 @@ const ClientsPage = async ({
           <div className="rounded-sm border bg-background overflow-hidden p-2.5 ">
             <ClientsTable archived={archived} clients={items} />
 
-            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+            <div className="flex-col-center gap-3 sm:flex-row sm:justify-between">
               <p className="text-sm text-muted-foreground">
                 عرض {from} - {to} من {total} عميل
               </p>

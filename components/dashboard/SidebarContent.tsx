@@ -12,7 +12,7 @@ export function SidebarContent({
 }) {
   return (
     <div className="flex h-full flex-col p-4">
-      <div className="mb-8 flex items-center gap-2 px-2 pt-2 text-2xl font-bold">
+      <div className="mb-8 flex-start gap-2 px-2 pt-2 text-2xl font-bold">
         <Scale className="size-8 mt-1" />
         وكيل
       </div>

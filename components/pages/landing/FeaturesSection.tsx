@@ -80,7 +80,7 @@ const FeaturesSection = () => {
               <motion.li
                 key={index}
                 variants={cardVariants}
-                className="feature-card card flex flex-col items-center text-center"
+                className="feature-card card flex-col-center text-center"
               >
                 {/* Icon Wrapper */}
                 <div className="icon-wrapper w-16 h-16 rounded-full flex-center bg-accent text-primary mb-4">

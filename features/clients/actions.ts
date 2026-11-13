@@ -176,7 +176,7 @@ export async function deleteClient(id: string) {
   } catch (e) {
     // 23503 = foreign key violence: The database itself was rejected because the client had issues
     if (pgCode(e) === "23503") {
-      return fail("لا يمكن حذف عميل عنده قضايا. أرشفه بدلاً من الحذف.");
+      return fail("لا يمكن حذف عميل لديه قضايا. أرشفه بدلاً من الحذف.");
     }
     console.error("deleteClient failed:", e);
     return fail("تعذّر حذف العميل، حاول مرة أخرى");

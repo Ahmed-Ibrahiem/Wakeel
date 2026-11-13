@@ -71,7 +71,7 @@ const Footer = () => {
             <h3 className="text-primary-foreground mb-4">
               {content.columns[2].title}
             </h3>
-            <div className="flex items-center gap-2 text-sm text-gray-300 mb-6">
+            <div className="flex-start gap-2 text-sm text-gray-300 mb-6">
               <HiOutlineEnvelope className="size-5 text-primary" />
               <a
                 href={`mailto:${content.columns[2].contact?.email}`}
@@ -82,14 +82,14 @@ const Footer = () => {
             </div>
 
             {/* Social Media Icons */}
-            <div className="flex items-center gap-3">
+            <div className="flex-start gap-3">
               {content.columns[2].socials?.map((social, index) => {
                 return (
                   <a
                     key={index}
                     href={social.href}
                     aria-label={social.name}
-                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary transition-colors"
+                    className="w-10 h-10 rounded-full bg-white/10 flex-center text-white hover:bg-primary transition-colors"
                   >
                     {social.name === "LinkedIn" && (
                       <FaLinkedinIn className="size-4" />

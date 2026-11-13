@@ -19,7 +19,7 @@ export default async function DashboardLayout({
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-2 border-b bg-background px-4 py-3 lg:hidden">
+        <header className="flex-start gap-2 border-b bg-background px-4 py-3 lg:hidden">
           <MobileNav name={user.name} />
           <span className="text-lg font-bold">وكيل</span>
         </header>
