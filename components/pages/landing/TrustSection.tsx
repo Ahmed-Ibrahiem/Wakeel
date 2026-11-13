@@ -64,9 +64,9 @@ const TrustSection = () => {
                 <motion.li
                   key={index}
                   variants={itemVariants}
-                  className="flex items-center gap-3 text-sm font-medium text-heading"
+                  className="flex-start gap-3 text-sm font-medium text-heading"
                 >
-                  <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex-center shrink-0">
                     ✓
                   </div>
                   <span>{feature}</span>

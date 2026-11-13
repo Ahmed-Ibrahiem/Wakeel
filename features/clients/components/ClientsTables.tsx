@@ -14,20 +14,23 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClientRowActions } from "@/features/clients/components/ClientRowActions";
 
+type ClientRow = Client & { casesCount: number };
+
 export function ClientsTable({
   clients,
   archived,
 }: {
-  clients: Client[];
+  clients: ClientRow[];
   archived: boolean;
 }) {
   return (
     <div className="h-117 overflow-y-auto">
       <Table>
         <TableHeader>
-          <TableRow className="bg-accent hover:bg-accent! border-1 border-border rounded-sm!">
+          <TableRow className="bg-accent hover:bg-accent! border-1 border-border rounded-sm! text-center!">
             <TableHead>الاسم</TableHead>
             <TableHead>رقم الهاتف</TableHead>
+            <TableHead>القضايا</TableHead>
             <TableHead className="hidden md:table-cell">
               تاريخ أول تعامل
             </TableHead>
@@ -45,6 +48,9 @@ export function ClientsTable({
               </TableCell>
               <TableCell dir="ltr" className="text-right tabular-nums">
                 {formatPhone(c.phone)}
+              </TableCell>
+              <TableCell className="tabular-nums">
+                {c.casesCount > 0 ? c.casesCount : "—"}
               </TableCell>
               <TableCell
                 dir="ltr"

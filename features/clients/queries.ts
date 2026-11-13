@@ -11,8 +11,12 @@ import {
   or,
   asc,
   SQL,
+  inArray,
+  sql,
+  getColumnTable,
+  getTableColumns,
 } from "drizzle-orm";
-import { clients } from "@/db/schema";
+import { cases, clients } from "@/db/schema";
 import { db } from "@/db";
 import * as z from "zod";
 
@@ -55,15 +59,30 @@ export const clientsList = async (raw: RawParams) => {
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const currentPage = Math.min(page, totalPages);
 
+  const casesCount = sql<number>`
+    (select count(*)::int from ${cases}
+    where ${cases.clientId} = ${clients.id}
+    and ${cases.userId} = ${clients.userId})
+  `.as("cases_count");
+
+  // Cases per client, calculated inside the same query (never stored)
   const items = await db
-    .select()
+    .select({ ...getTableColumns(clients), casesCount })
     .from(clients)
     .where(where)
     .orderBy(asc(clients.fullName), asc(clients.id))
     .limit(pageSize)
     .offset((currentPage - 1) * pageSize);
 
-  return { items, page: currentPage, totalPages, pageSize, total, q, archived };
+  return {
+    items,
+    page: currentPage,
+    totalPages,
+    pageSize,
+    total,
+    q,
+    archived,
+  };
 };
 
 export async function getClient(id: string) {

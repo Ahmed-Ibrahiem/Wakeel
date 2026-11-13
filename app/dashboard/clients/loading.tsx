@@ -14,7 +14,7 @@ export default function Loading() {
 
       <div className="space-y-4 rounded-xl border bg-background p-4">
         {Array.from({ length: 6 }, (_, i) => (
-          <div key={i} className="flex items-center gap-3">
+          <div key={i} className="flex-start gap-3">
             <Skeleton className="size-9 shrink-0 rounded-full" />
             <Skeleton className="h-4 w-48" />
             <Skeleton className="ms-auto h-4 w-28" />

@@ -18,7 +18,7 @@ const NavLinks = ({ onNavigate }: { onNavigate?: () => void }) => {
               onClick={onNavigate}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors w-full",
+                "flex-start gap-3 rounded-sm px-3 py-2.5 text-sm font-medium transition-colors w-full",
                 active
                   ? "bg-accent/15 text-white"
                   : "text-white/80 hover:bg-white/10 hover:text-white",

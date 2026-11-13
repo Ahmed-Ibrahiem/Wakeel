@@ -32,7 +32,7 @@ export function PasswordWithLabel<S>({
             <FieldLabel className="text-sm font-bold" htmlFor={nameInSchema}>
               {fieldName}
             </FieldLabel>
-            <div className="relative flex items-center">
+            <div className="relative flex-start">
               <Input
                 className={`w-full p-2.5! rounded-sm border text-sm outline-none! ${className}`}
                 disabled={disabled || form.formState.isSubmitting}

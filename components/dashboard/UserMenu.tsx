@@ -11,8 +11,8 @@ function initials(name: string) {
 
 export function UserMenu({ name }: { name: string }) {
   return (
-    <div className="flex items-center gap-3 border-t border-white/15 pt-4">
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/20 text-sm font-bold">
+    <div className="flex-start gap-3 border-t border-white/15 pt-4">
+      <div className="flex-center size-10 shrink-0  rounded-full bg-white/20 text-sm font-bold">
         {initials(name)}
       </div>
       <div className="min-w-0 flex-1">

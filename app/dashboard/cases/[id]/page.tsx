@@ -1,0 +1,95 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowRight, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { getCase } from "@/features/cases/queries";
+import {
+  CASE_STATUS_LABELS,
+  CASE_STATUS_STYLES,
+  CASE_TYPE_LABELS,
+} from "@/features/cases/labels";
+
+type Params = Promise<{ id: string }>;
+
+function Item({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <div className="mt-1 text-sm font-medium break-words">{children}</div>
+    </div>
+  );
+}
+
+export default async function CaseDetailsPage({ params }: { params: Params }) {
+  const { id } = await params;
+
+  const item = await getCase(id);
+  if (!item) notFound();
+
+  return (
+    <div className="mx-auto max-w-3xl space-y-6">
+      <Link
+        href="/dashboard/cases"
+        className="inline-flex flex-start gap-1 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ArrowRight className="size-4" />
+        كل القضايا
+      </Link>
+
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold" dir="ltr">
+            {item.caseNumber}
+          </h1>
+          <div className="flex-start flex-wrap  gap-2">
+            <span
+              className={cn(
+                "rounded-full px-3 py-1 text-xs font-medium",
+                CASE_STATUS_STYLES[item.status],
+              )}
+            >
+              {CASE_STATUS_LABELS[item.status] ?? item.status}
+            </span>
+            {item.archivedAt && (
+              <span className="rounded-full bg-stone-200 px-3 py-1 text-xs font-medium text-stone-700">
+                مؤرشفة
+              </span>
+            )}
+          </div>
+        </div>
+
+        <Button asChild className="rounded-sm!">
+          <Link href={`/dashboard/cases/${item.id}/edit`}>
+            <Pencil className="size-4" />
+            تعديل
+          </Link>
+        </Button>
+      </header>
+
+      <section className="grid gap-6 rounded-xl border bg-background p-6 sm:grid-cols-2">
+        <Item label="الموكل">{item.clientName}</Item>
+        <Item label="نوع القضية">
+          {CASE_TYPE_LABELS[item.caseType] ?? item.caseType}
+        </Item>
+        <Item label="المحكمة">{item.courtName}</Item>
+        <Item label="الخصم">{item.opposingParty ?? "—"}</Item>
+        <Item label="تاريخ الحكم">
+          {item.judgmentDate ? <span dir="ltr">{item.judgmentDate}</span> : "—"}
+        </Item>
+        {item.notes && (
+          <div className="sm:col-span-2">
+            <Item label="ملاحظات">
+              {/* React escapes text; whitespace-pre-wrap keeps the line breaks */}
+              <p className="whitespace-pre-wrap">{item.notes}</p>
+            </Item>
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-xl border border-dashed bg-background p-6 text-center text-sm text-muted-foreground">
+        الجلسات والمواعيد هتظهر هنا بعد ما نبنيها.
+      </section>
+    </div>
+  );
+}

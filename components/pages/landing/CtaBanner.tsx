@@ -32,7 +32,7 @@ const CtaBanner = () => {
           </div>
 
           {/* Content Wrapper */}
-          <div className="relative z-10 max-w-2xl flex flex-col items-center gap-4">
+          <div className="relative z-10 max-w-2xl flex-col-center gap-4">
             <h2 className="text-primary-foreground">{content.title}</h2>
             <p className="text-white/80">{content.subtitle}</p>
 
@@ -41,10 +41,7 @@ const CtaBanner = () => {
                 className="bg-white text-primary hover:bg-white/90
                font-medium px-8 py-2.5 rounded-sm shadow-md transition-all duration-300 hover:scale-105 cursor-pointer"
               >
-                <a
-                  href={content.buttonLink}
-                  className="flex items-center gap-2"
-                >
+                <a href={content.buttonLink} className="flex-start gap-2">
                   <span>{content.buttonText}</span>
                   <FaArrowLeft className="text-sm rtl:rotate-180" />
                 </a>

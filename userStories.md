@@ -30,27 +30,28 @@ Check each story off once it's fully built and working.
 
 ## 4. Client Management
 
-- [ ] **As a** lawyer, **I want to** view a list of all my clients, **so that** I can quickly find and manage their information. `v1`
-- [ ] **As a** lawyer, **I want to** search clients by name or phone number, **so that** I can find them fast during a busy day. `v1`
-- [ ] **As a** lawyer, **I want to** store basic contact info for each client (phone, email, address), **so that** I can reach them when needed. `v1`
-- [ ] **As a** lawyer, **I want to** see the date I first started working with a client, **so that** I have a history of our relationship. `v1`
-- [ ] **As a** lawyer, **I want to** see how many cases each client has and their latest case in the list, **so that** I get the picture without opening each client. `v1`
+- [x] **As a** lawyer, **I want to** view a list of all my clients, **so that** I can quickly find and manage their information. `v1`
+- [x] **As a** lawyer, **I want to** search clients by name or phone number, **so that** I can find them fast during a busy day. `v1`
+- [x] **As a** lawyer, **I want to** store basic contact info for each client (phone, email, address), **so that** I can reach them when needed. `v1`
+- [x] **As a** lawyer, **I want to** see the date I first started working with a client, **so that** I have a history of our relationship. `v1`
+- [x] **As a** lawyer, **I want to** see how many cases each client has in the list, **so that** I get the picture without opening each client. `v1`
+- [ ] **As a** lawyer, **I want to** see each client's latest case in the list, **so that** I know what I last handled for them. `v1`
 - [ ] **As a** lawyer, **I want to** open a client and see all their cases in one place, **so that** I see everything I'm handling for them. `v1`
-- [ ] **As a** lawyer, **I want to** edit a client's details, **so that** the information stays correct. `v1`
-- [ ] **As a** lawyer, **I want to** archive a client (and delete one only if they have no cases), **so that** I never lose case history by accident. `v1`
+- [x] **As a** lawyer, **I want to** edit a client's details, **so that** the information stays correct. `v1`
+- [x] **As a** lawyer, **I want to** archive a client (and delete one only if they have no cases), **so that** I never lose case history by accident. `v1`
 
-> A client is shown as **active** when they have at least one open case, and **inactive** otherwise. This is calculated, never typed in.
+> A client is shown as **active** when they have at least one open case, and **inactive** otherwise. This is calculated, never typed in. (Not built yet: the list currently shows the case count only.)
 
 ## 5. Case Management
 
-- [ ] **As a** lawyer, **I want to** create a case with a case number, type (civil, criminal, commercial, family, labor, other), court, and opposing party, **so that** I have all the key identifying details in one place. `v1`
-- [ ] **As a** lawyer, **I want to** set and update a case's status (ongoing, postponed, closed) and record the judgment date when there is one, **so that** I know where each case stands at a glance. `v1`
-- [ ] **As a** lawyer, **I want to** browse all my cases, filter them by status, and search by case number or client name, **so that** I can find a case quickly. `v1`
-- [ ] **As a** lawyer, **I want to** add free-text notes to a case after each session, **so that** I remember what happened and what the judge said. `v1`
-- [ ] **As a** lawyer, **I want to** open a case and see its hearings, deadlines and notes together, **so that** I have the full picture on one screen. `v1`
+- [x] **As a** lawyer, **I want to** create a case with a case number, type (civil, criminal, commercial, family, labor, other), court, and opposing party, **so that** I have all the key identifying details in one place. `v1`
+- [x] **As a** lawyer, **I want to** set and update a case's status (ongoing, postponed, closed) and record the judgment date when there is one, **so that** I know where each case stands at a glance. `v1`
+- [x] **As a** lawyer, **I want to** browse all my cases, filter them by status, and search by case number or client name, **so that** I can find a case quickly. `v1`
+- [ ] **As a** lawyer, **I want to** add free-text notes to a case after each session, **so that** I remember what happened and what the judge said. `v1` (a general notes field on the case exists; per-session notes arrive with hearings)
+- [ ] **As a** lawyer, **I want to** open a case and see its hearings, deadlines and notes together, **so that** I have the full picture on one screen. `v1` (the details page exists; hearings and deadlines arrive with their features)
 - [ ] **As a** lawyer, **I want to** see a case marked **urgent** when it has a hearing or deadline within 48 hours, **so that** I notice it without checking dates. `v1`
 - [ ] **As a** lawyer, **I want to** be warned when an ongoing case has no upcoming hearing, **so that** I don't forget to schedule the next session. `v1`
-- [ ] **As a** lawyer, **I want to** edit or archive a case, **so that** my list stays accurate. `v1`
+- [x] **As a** lawyer, **I want to** edit, archive or delete a case (delete only when it has no hearings or deadlines), **so that** my list stays accurate. `v1`
 
 > "Urgent" is calculated from upcoming dates. It is not a status and not a field the lawyer fills in.
 
@@ -81,7 +82,7 @@ Check each story off once it's fully built and working.
 
 ## 9. Search & Reports
 
-- [ ] **As a** lawyer, **I want to** search within each list (clients, cases), **so that** I can find information fast. `v1`
+- [x] **As a** lawyer, **I want to** search within each list (clients, cases), **so that** I can find information fast. `v1`
 - [ ] **As a** lawyer, **I want to** search everything from one place (name, case number, date), **so that** I find information fast before a session. `later`
 - [ ] **As a** lawyer, **I want to** see a monthly report (new cases, closed cases, still-open cases), **so that** I can track my workload and progress over time. `later`
 
@@ -101,6 +102,8 @@ Check each story off once it's fully built and working.
 
 ## 12. Quality (applies to everything)
 
+These stay open until every v1 feature is done. Verified so far: authentication, clients and cases (cross-account tests passed).
+
 - [ ] **As a** lawyer, **I want** my data to be invisible to every other lawyer, **so that** my clients' information stays confidential. `v1`
 - [ ] **As a** lawyer, **I want** every page to work on my phone, **so that** I can use it at court. `v1`
 - [ ] **As a** lawyer, **I want** empty, loading and error states on every screen, **so that** I always know what is happening. `v1`
@@ -110,9 +113,10 @@ Check each story off once it's fully built and working.
 ## Release plan
 
 **v1 (feedback version)**
+
 - [x] Authentication, landing page
-- [ ] Clients
-- [ ] Cases
+- [x] Clients (the "latest case", active/inactive and client details page parts wait for hearings and a client page)
+- [x] Cases (the urgent badge and hearing-related parts arrive with hearings)
 - [ ] Hearings and deadlines with email reminders and conflict warning
 - [ ] Dashboard (hearings, deadlines, caseload, recent cases)
 - [ ] Settings (reminders, time zone)
@@ -138,5 +142,7 @@ Check each story off once it's fully built and working.
 9. **Case types** include family and labor.
 10. **Search is per page** in v1.
 11. **Release plan** is v1, v1.1, v1.2 as above.
+12. **Deleting a case** is allowed only when it has no hearings or deadlines. Otherwise archive.
+13. **Duplicate case numbers** trigger a confirmation, not a block (the same number can legitimately exist in another court).
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).

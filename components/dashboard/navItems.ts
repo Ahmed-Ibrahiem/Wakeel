@@ -29,7 +29,7 @@ export const navItems: NavItem[] = [
     href: "/dashboard/cases",
     label: "القضايا",
     icon: FolderOpen,
-    enabled: false,
+    enabled: true,
   },
   {
     href: "/dashboard/hearings",
