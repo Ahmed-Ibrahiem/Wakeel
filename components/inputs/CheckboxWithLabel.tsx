@@ -1,9 +1,8 @@
-import { Input } from "@/components/ui/input";
-import { Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { useFormContext, Controller } from "react-hook-form";
-import { ComponentProps, InputHTMLAttributes, RefAttributes } from "react";
-import { Checkbox } from "../ui/checkbox";
+import { FieldError, FieldLabel } from "@/components/ui/field";
 import { cn } from "cn";
+import { ComponentProps } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import { Checkbox } from "../ui/checkbox";
 
 type Props<S> = {
   label: React.ReactNode;

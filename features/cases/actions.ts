@@ -7,6 +7,8 @@ import { cases, clients } from "@/db/schema";
 import { requireSession } from "@/lib/session";
 import { checkRateLimits, limitMessage } from "@/lib/rateLimit";
 import { caseFormSchema, caseIdSchema, CaseFormValues } from "./schemas";
+import { fail } from "@/lib/action-result";
+import { pgCode } from "@/lib/pg-error";
 
 // "" becomes null, ready for storage (userId is added by the action)
 function prepare(v: CaseFormValues) {
@@ -41,8 +43,6 @@ async function numberExists(
   return !!row;
 }
 const DUPLICATE = "duplicate" as const;
-
-const fail = (message: string) => ({ success: false as const, message });
 
 const NOT_FOUND = "القضية غير موجودة";
 
@@ -210,15 +210,6 @@ export async function restoreCase(id: string) {
 
   revalidatePath("/dashboard/cases");
   return { success: true as const };
-}
-
-function pgCode(e: unknown): string | undefined {
-  let cur = e as { code?: unknown; cause?: unknown } | undefined;
-  for (let i = 0; i < 4 && cur; i++) {
-    if (typeof cur.code === "string") return cur.code;
-    cur = cur.cause as typeof cur;
-  }
-  return undefined;
 }
 
 export async function deleteCase(id: string) {

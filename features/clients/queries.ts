@@ -11,21 +11,14 @@ import {
   or,
   asc,
   SQL,
-  inArray,
   sql,
-  getColumnTable,
   getTableColumns,
 } from "drizzle-orm";
 import { cases, clients } from "@/db/schema";
 import { db } from "@/db";
 import * as z from "zod";
+import { escapeLike, first, type RawParams } from "@/lib/query-utils";
 
-type RawParams = Record<string, string | string[] | undefined>;
-
-const first = (v: string | string[] | undefined) =>
-  Array.isArray(v) ? v[0] : v;
-
-const escapeLike = (s: string) => s.replace(/[\\%_]/g, "\\$&");
 
 export const clientsList = async (raw: RawParams) => {
   const { user } = await requireSession();

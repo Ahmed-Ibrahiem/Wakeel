@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { FaArrowLeft } from "react-icons/fa6";
 import { homePage } from "@/data/Ar";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { FaArrowLeft } from "react-icons/fa6";
 
 // CTA Banner data supporting localization readiness
 const CtaBanner = () => {

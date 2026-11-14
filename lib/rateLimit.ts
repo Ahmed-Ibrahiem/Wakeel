@@ -47,3 +47,7 @@ export async function checkRateLimits(rules: Rule[]) {
 export function limitMessage(sec: number) {
   return `محاولات كثيرة. حاول مرة أخرى بعد ${Math.ceil(sec / 60)} دقيقة.`;
 }
+
+// One hourly bucket per action name and user
+export const limitedPerHour = (name: string, userId: string, max: number) =>
+  checkRateLimits([{ name, id: userId, max, windowSec: 3600 }]);

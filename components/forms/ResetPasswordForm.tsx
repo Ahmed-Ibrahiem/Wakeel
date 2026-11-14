@@ -1,16 +1,15 @@
 "use client";
-import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { InputWithLabel } from "@/components/inputs/InputWithLabel";
-import { resetPassword } from "@/server/password";
 import {
   resetPasswordSchema,
   type ResetPasswordValues,
 } from "@/lib/validations/auth";
+import { resetPassword } from "@/server/password";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
 import { MdLockReset } from "react-icons/md";
+import { toast } from "sonner";
 import { PasswordWithLabel } from "../inputs/PasswordWithLabel";
 
 export default function ResetPasswordForm({ token }: { token: string }) {

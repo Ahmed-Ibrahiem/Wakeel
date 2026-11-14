@@ -11,8 +11,8 @@ import { E164_RE, toE164 } from "@/lib/phone";
 import { getUserSettings } from "@/lib/userSettings";
 import { todayIn } from "@/lib/dates";
 import { clientFormSchema, type ClientFormValues } from "./schemas";
-
-const fail = (message: string) => ({ success: false as const, message });
+import { fail } from "@/lib/action-result";
+import { pgCode } from "@/lib/pg-error";
 
 // Common rules between addition and modification, and returns data ready for storage
 type Prepared =
@@ -41,15 +41,6 @@ function prepare(v: ClientFormValues, timezone: string): Prepared {
       firstContactDate: v.firstContactDate,
     },
   };
-}
-
-function pgCode(e: unknown): string | undefined {
-  let cur = e as { code?: unknown; cause?: unknown } | undefined;
-  for (let i = 0; i < 4 && cur; i++) {
-    if (typeof cur.code === "string") return cur.code;
-    cur = cur.cause as typeof cur;
-  }
-  return undefined;
 }
 
 export async function createClient(input: unknown) {
