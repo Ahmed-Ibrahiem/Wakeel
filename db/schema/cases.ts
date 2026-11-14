@@ -11,6 +11,7 @@ import {
 import { user } from "./auth-schema";
 import { clients } from "./clients";
 import { caseStatusEnum, caseTypeEnum } from "./enums";
+import { timestamps } from "./columns";
 
 export const cases = pgTable(
   "cases",
@@ -29,13 +30,7 @@ export const cases = pgTable(
     judgmentDate: date("judgment_date", { mode: "string" }),
     notes: text("notes"),
     archivedAt: timestamp("archived_at", { withTimezone: true }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow()
-      .$onUpdate(() => new Date()),
+    ...timestamps,
   },
   (t) => [
     // The case must be linked to a client who belongs to the same lawyer (at the database level)

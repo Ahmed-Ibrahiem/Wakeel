@@ -24,4 +24,6 @@ export const getUserSettings = async (userId: string) => {
     .where(eq(userSettings.userId, userId));
 
   if (again) return again;
+
+  throw new Error("Failed to load user settings");
 };

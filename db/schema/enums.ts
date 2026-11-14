@@ -14,3 +14,15 @@ export const caseStatusEnum = pgEnum("case_status", [
   "postponed",
   "closed",
 ]);
+
+export const hearingTypeEnum = pgEnum("hearing_type", [
+  "pleading",
+  "ruling",
+  "other",
+]);
+
+export const hearingStatusEnum = pgEnum("hearing_status", [
+  "scheduled",
+  "completed",
+  "postponed",
+]);

@@ -9,10 +9,18 @@ import {
   CASE_STATUS_STYLES,
   CASE_TYPE_LABELS,
 } from "@/features/cases/labels";
+import { Suspense } from "react";
+import { HearingsSection } from "@/features/hearings/components/HearingsSection";
 
 type Params = Promise<{ id: string }>;
 
-function Item({ label, children }: { label: string; children: React.ReactNode }) {
+function Item({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
       <p className="text-xs text-muted-foreground">{label}</p>
@@ -67,7 +75,7 @@ export default async function CaseDetailsPage({ params }: { params: Params }) {
         </Button>
       </header>
 
-      <section className="grid gap-6 rounded-xl border bg-background p-6 sm:grid-cols-2">
+      <section className="grid gap-6 rounded-sm border bg-background p-6 sm:grid-cols-2">
         <Item label="الموكل">{item.clientName}</Item>
         <Item label="نوع القضية">
           {CASE_TYPE_LABELS[item.caseType] ?? item.caseType}
@@ -87,9 +95,13 @@ export default async function CaseDetailsPage({ params }: { params: Params }) {
         )}
       </section>
 
-      <section className="rounded-xl border border-dashed bg-background p-6 text-center text-sm text-muted-foreground">
-        الجلسات والمواعيد هتظهر هنا بعد ما نبنيها.
-      </section>
+      <Suspense
+        fallback={
+          <div className="h-32 animate-pulse rounded-sm border bg-muted/40" />
+        }
+      >
+        <HearingsSection caseId={item.id} />
+      </Suspense>
     </div>
   );
 }

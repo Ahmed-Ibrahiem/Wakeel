@@ -11,7 +11,7 @@ import { signIn } from "@/server/users";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { signInSchema, SignInValues } from "@/lib/validations/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { PasswordWithLabel } from "../inputs/PasswordWithLabel";
 
@@ -52,7 +52,8 @@ const LoginForm = () => {
 
     if (success) {
       toast.success(message);
-      router.push("/dashboard");
+      router.replace("/dashboard");
+      router.refresh();
     } else {
       toast.error(message);
     }

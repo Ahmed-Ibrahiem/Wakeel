@@ -27,6 +27,20 @@ export function requiredText(label: string, max: number) {
     );
 }
 
+// required, but keeps line breaks (decisions, long notes)
+export function requiredMultilineText(label: string, max: number) {
+  return z
+    .string()
+    .transform(cleanMultiLine)
+    .pipe(
+      z
+        .string()
+        .min(1, `${label} مطلوب`)
+        .max(max, `${label} طويل جداً`)
+        .refine((s) => HAS_LETTER_OR_DIGIT.test(s), `${label} غير صالح`),
+    );
+}
+
 // optional: stays a string ("" when empty). The action turns "" into null.
 export function optionalText(label: string, max: number, multiline = false) {
   return z

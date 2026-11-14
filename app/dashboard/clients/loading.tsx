@@ -12,7 +12,7 @@ export default function Loading() {
 
       <Skeleton className="h-10 w-full" />
 
-      <div className="space-y-4 rounded-xl border bg-background p-4">
+      <div className="space-y-4 rounded-sm border bg-background p-4">
         {Array.from({ length: 6 }, (_, i) => (
           <div key={i} className="flex-start gap-3">
             <Skeleton className="size-9 shrink-0 rounded-full" />

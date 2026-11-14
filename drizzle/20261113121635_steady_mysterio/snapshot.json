@@ -1,0 +1,73 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "225d24e1-7282-4c1d-8145-8fe1d9a8ccd4",
+  "prevIds": [
+    "da572411-f63c-4f6c-83ed-3c36a864188a"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "hearing_status"
+      ],
+      "writes": [
+        "s|enum|public.hearing_status",
+        "n|enum|public.hearing_status",
+        "e|enum|public.hearing_status",
+        "n|type|public.hearing_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "hearing_type"
+      ],
+      "writes": [
+        "s|enum|public.hearing_type",
+        "n|enum|public.hearing_type",
+        "e|enum|public.hearing_type",
+        "n|type|public.hearing_type"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "hearing_status",
+        "values": [
+          "scheduled",
+          "completed",
+          "postponed"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "hearing_type",
+        "values": [
+          "pleading",
+          "ruling",
+          "other"
+        ],
+        "entityType": "enums"
+      }
+    }
+  ]
+}

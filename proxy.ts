@@ -6,12 +6,19 @@ export async function proxy(request: NextRequest) {
     headers: request.headers,
   });
 
-  if (!session) {
+  const { pathname } = request.nextUrl;
+
+  const isAuthPage = pathname === "/login" || pathname === "/register";
+
+  if (session && isAuthPage)
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+
+  if (!session && !isAuthPage) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (
-    !session.user.phone &&
+    !session?.user.phone &&
     request.nextUrl.pathname.startsWith("/dashboard")
   ) {
     return NextResponse.redirect(new URL("/onboarding", request.url));
@@ -21,5 +28,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/onboarding"],
+  matcher: ["/dashboard/:path*", "/onboarding", "/login", "/register"],
 };

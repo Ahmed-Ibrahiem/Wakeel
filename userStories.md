@@ -47,8 +47,8 @@ Check each story off once it's fully built and working.
 - [x] **As a** lawyer, **I want to** create a case with a case number, type (civil, criminal, commercial, family, labor, other), court, and opposing party, **so that** I have all the key identifying details in one place. `v1`
 - [x] **As a** lawyer, **I want to** set and update a case's status (ongoing, postponed, closed) and record the judgment date when there is one, **so that** I know where each case stands at a glance. `v1`
 - [x] **As a** lawyer, **I want to** browse all my cases, filter them by status, and search by case number or client name, **so that** I can find a case quickly. `v1`
-- [ ] **As a** lawyer, **I want to** add free-text notes to a case after each session, **so that** I remember what happened and what the judge said. `v1` (a general notes field on the case exists; per-session notes arrive with hearings)
-- [ ] **As a** lawyer, **I want to** open a case and see its hearings, deadlines and notes together, **so that** I have the full picture on one screen. `v1` (the details page exists; hearings and deadlines arrive with their features)
+- [x] **As a** lawyer, **I want to** add free-text notes to a case after each session, **so that** I remember what happened and what the judge said. `v1` (a general notes field on the case, plus the decision and notes on each hearing)
+- [ ] **As a** lawyer, **I want to** open a case and see its hearings, deadlines and notes together, **so that** I have the full picture on one screen. `v1` (the details page shows hearings and notes; deadlines arrive with their feature)
 - [ ] **As a** lawyer, **I want to** see a case marked **urgent** when it has a hearing or deadline within 48 hours, **so that** I notice it without checking dates. `v1`
 - [ ] **As a** lawyer, **I want to** be warned when an ongoing case has no upcoming hearing, **so that** I don't forget to schedule the next session. `v1`
 - [x] **As a** lawyer, **I want to** edit, archive or delete a case (delete only when it has no hearings or deadlines), **so that** my list stays accurate. `v1`
@@ -57,15 +57,17 @@ Check each story off once it's fully built and working.
 
 ## 6. Hearings & Deadlines (Core Feature)
 
-- [ ] **As a** lawyer, **I want to** set a hearing date for a case, **so that** it appears on my dashboard. `v1`
-- [ ] **As a** lawyer, **I want to** record a session's decision and set the next hearing date in one step, **so that** the daily routine after court takes seconds. `v1`
-- [ ] **As a** lawyer, **I want to** get an email reminder before a hearing (for example 1 day before and a few hours before), **so that** I never miss a court session. `v1`
-- [ ] **As a** lawyer, **I want to** get warned if two hearings are scheduled too close together, **so that** I don't accidentally double-book myself. `v1`
+- [x] **As a** lawyer, **I want to** set a hearing date for a case, **so that** it appears on my dashboard. `v1` (the hearing is saved and shown in the case; the dashboard itself comes later)
+- [x] **As a** lawyer, **I want to** record a session's decision and set the next hearing date in one step, **so that** the daily routine after court takes seconds. `v1`
+- [ ] **As a** lawyer, **I want to** get an email reminder before a hearing (for example 1 day before and a few hours before), **so that** I never miss a court session. `v1` (the reminder columns exist, nothing sends yet)
+- [x] **As a** lawyer, **I want to** get warned if two hearings are scheduled too close together, **so that** I don't accidentally double-book myself. `v1`
 - [ ] **As a** lawyer, **I want to** track non-hearing deadlines too (last date to file an appeal or a defense memo), with reminders, **so that** I don't lose a case permanently over a missed paperwork deadline. `v1`
 - [ ] **As a** lawyer, **I want to** mark a deadline as done, **so that** it stops appearing as pending. `v1`
 - [ ] **As a** lawyer, **I want to** see all my upcoming dates in a calendar view (monthly/weekly), **so that** I get a full picture of my schedule. `v1.2`
 
-> v1 conflict check: another hearing within a time window around the new one. Location-based checks ("same day but far apart") come later.
+> v1 conflict check: another scheduled hearing within 90 minutes of the new one. It asks for confirmation, it never blocks. Location-based checks ("same day but far apart") come later.
+>
+> A hearing can be edited only while it is `scheduled`. A new hearing must be later than the last one that already has a decision, so the timeline never goes backwards.
 
 ## 7. Documents
 
@@ -102,7 +104,7 @@ Check each story off once it's fully built and working.
 
 ## 12. Quality (applies to everything)
 
-These stay open until every v1 feature is done. Verified so far: authentication, clients and cases (cross-account tests passed).
+These stay open until every v1 feature is done. Verified so far: authentication, clients, cases and hearings (cross-account tests passed).
 
 - [ ] **As a** lawyer, **I want** my data to be invisible to every other lawyer, **so that** my clients' information stays confidential. `v1`
 - [ ] **As a** lawyer, **I want** every page to work on my phone, **so that** I can use it at court. `v1`
@@ -113,11 +115,11 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 ## Release plan
 
 **v1 (feedback version)**
-
 - [x] Authentication, landing page
 - [x] Clients (the "latest case", active/inactive and client details page parts wait for hearings and a client page)
 - [x] Cases (the urgent badge and hearing-related parts arrive with hearings)
-- [ ] Hearings and deadlines with email reminders and conflict warning
+- [x] Hearings (create, edit, delete, decision + next hearing in one step, conflict warning)
+- [ ] Deadlines, then email reminders for hearings and deadlines
 - [ ] Dashboard (hearings, deadlines, caseload, recent cases)
 - [ ] Settings (reminders, time zone)
 
@@ -144,5 +146,7 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 11. **Release plan** is v1, v1.1, v1.2 as above.
 12. **Deleting a case** is allowed only when it has no hearings or deadlines. Otherwise archive.
 13. **Duplicate case numbers** trigger a confirmation, not a block (the same number can legitimately exist in another court).
+14. **Hearings:** a decision plus the next date is one step (old hearing becomes `postponed`, a new `scheduled` one is created; with no next date the old one becomes `completed`). Only `scheduled` hearings are editable, and a scheduled hearing must come after the last decided one.
+15. **Close hearings** (within 90 minutes) trigger a confirmation, not a block.
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).

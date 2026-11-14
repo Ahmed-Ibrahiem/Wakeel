@@ -53,7 +53,7 @@ export function ClientForm({ today, clientId, initialValues }: Props) {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         noValidate
-        className="space-y-7 rounded-xl border bg-background p-6"
+        className="space-y-7 rounded-sm border bg-background p-6"
       >
         <InputWithLabel<ClientFormValues>
           fieldName="الاسم بالكامل"

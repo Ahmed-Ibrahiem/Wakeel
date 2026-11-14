@@ -80,7 +80,7 @@ const TrustSection = () => {
             variants={itemVariants}
             className="relative flex justify-center"
           >
-            <div className="relative rounded-lg overflow-hidden shadow-xl border border-border bg-card">
+            <div className="relative rounded-sm overflow-hidden shadow-xl border border-border bg-card">
               <Image
                 src={content.image}
                 alt={content.alt}
