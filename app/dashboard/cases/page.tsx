@@ -69,8 +69,8 @@ const CasesPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   }
 
   return (
-    <div className="space-y-2.5">
-      <header className="flex-between gap-4">
+    <div className="space-y-2">
+      <header>
         <div>
           <h1 className="text-2xl font-bold">القضايا</h1>
           <p className="text-sm text-muted-foreground">

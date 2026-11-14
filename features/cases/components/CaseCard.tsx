@@ -6,6 +6,7 @@ import {
   CASE_STATUS_STYLES,
   CASE_TYPE_LABELS,
 } from "../labels";
+import { getCaseSignals } from "../signals";
 import { CaseRowActions } from "./CaseRowActions";
 
 type CaseItem = {
@@ -16,14 +17,33 @@ type CaseItem = {
   courtName: string;
   status: string;
   judgmentDate: string | null;
+  archivedAt: Date | null;
   updatedAt: Date;
+  nextHearingAt: Date | null;
+  lastHearingAt: Date | null;
+  nextDeadlineDate: string | null;
 };
 
-function Field({ label, value }: { label: string; value: string }) {
+function Field({
+  label,
+  value,
+  danger,
+}: {
+  label: string;
+  value: string;
+  danger?: boolean;
+}) {
   return (
     <div>
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-sm font-medium wrap-break-word">{value}</p>
+      <p
+        className={cn(
+          "text-sm font-medium wrap-break-word",
+          danger && "text-red-700",
+        )}
+      >
+        {value}
+      </p>
     </div>
   );
 }
@@ -37,16 +57,11 @@ export function CaseCard({
   archived: boolean;
   timezone: string;
 }) {
-  // en-CA gives YYYY-MM-DD, in the lawyer's own time zone
-  const updated = new Intl.DateTimeFormat("en-CA", {
-    timeZone: timezone,
-  }).format(item.updatedAt);
-  const footerLabel = item.judgmentDate ? "تاريخ الحكم" : "آخر تحديث";
-  const footerDate = item.judgmentDate ?? updated;
+  const { urgent, footer, deadline } = getCaseSignals(item, timezone);
 
   return (
     <article className="flex flex-col overflow-hidden rounded-sm border bg-background">
-      <div className="flex-1 space-y-2.5 p-3.5">
+      <div className="flex-1 space-y-2.5 p-3.5 py-2.5!">
         {/* header */}
         <div className="flex-between gap-2">
           <div className="flex items-center gap-2">
@@ -58,7 +73,12 @@ export function CaseCard({
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center justify-end gap-1">
+            {urgent && (
+              <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
+                عاجلة
+              </span>
+            )}
             <span
               className={cn(
                 "rounded-full px-3 py-1 text-xs font-medium",
@@ -75,20 +95,42 @@ export function CaseCard({
           </div>
         </div>
 
-        <Field label="العميل" value={item.clientName} />
-        <Field
-          label="نوع القضية"
-          value={CASE_TYPE_LABELS[item.caseType] ?? item.caseType}
-        />
-        <Field label="المحكمة" value={item.courtName} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5  ">
+          <div className="flex-col-start gap-1.5">
+            <Field label="العميل" value={item.clientName} />
+            <Field
+              label="نوع القضية"
+              value={CASE_TYPE_LABELS[item.caseType] ?? item.caseType}
+            />
+            <Field label="المحكمة" value={item.courtName} />
+          </div>
+          {deadline && (
+            <Field
+              label={deadline.overdue ? "موعد نهائي متأخر" : "أقرب موعد نهائي"}
+              value={deadline.date}
+              danger={deadline.overdue}
+            />
+          )}
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="flex-between w-full gap-5 flex-wrap border-t px-4 py-2">
-        <div className="flex-start gap-2 text-xs text-muted-foreground">
+      <div className="flex-between w-full gap-5 flex-wrap border-t px-4 py-2 min-h-14">
+        <div
+          className={cn(
+            "flex-start gap-2 text-xs text-muted-foreground",
+            footer.warning && "text-amber-700",
+          )}
+        >
           <CalendarDays className="size-4" aria-hidden />
-          <span>{footerLabel}</span>
-          <span className="tabular-nums">{footerDate}</span>
+          <div className="flex-col-start gap-1">
+            <span>{footer.label}</span>
+            {footer.date && (
+              <span className="tabular-nums" dir="ltr">
+                {footer.date}
+              </span>
+            )}
+          </div>
         </div>
         <Link
           href={`/dashboard/cases/${item.id}`}
