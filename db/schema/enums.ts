@@ -26,3 +26,8 @@ export const hearingStatusEnum = pgEnum("hearing_status", [
   "completed",
   "postponed",
 ]);
+
+export const deadlineStatusEnum = pgEnum("deadline_status", [
+  "pending",
+  "done",
+]);

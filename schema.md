@@ -20,7 +20,7 @@ user (Better Auth)                        [x]
   └── clients                             [x]
         └── cases                         [x]
               ├── hearings                [x]
-              ├── deadlines               [ ]  next
+              ├── deadlines               [x]
               ├── payments                [ ]  v1.1
               └── documents               [ ]  v1.2
 
@@ -40,8 +40,8 @@ Every app table (clients, cases, hearings, deadlines, payments, documents) carri
 - **Calendar dates** (no time of day) use `date` and are read as strings (`"2026-11-05"`), so they never shift a day because of a time zone.
 - **Naming:** `snake_case` in the database, `camelCase` in TypeScript.
 - **Ownership is enforced twice.** Every app table has `user_id`, and a child table references its parent with a composite foreign key `(parent_id, user_id)`. A case can therefore never point at another lawyer's client, even if the application code has a bug. Queries must still filter by the `user_id` of the current session.
-- **Deletes:** deleting a user cascades to everything they own. Between app tables there is no cascade (`NO ACTION`), so a client that still has cases cannot be deleted, and the same applies to a case with hearings (and later deadlines). Use `archived_at` instead.
-- **Enums** for fixed sets of values. Adding a value is easy, removing or renaming one is a painful migration, so values are chosen carefully. Created so far: `case_type`, `case_status`, `hearing_type`, `hearing_status`. The deadline enum comes with its feature.
+- **Deletes:** deleting a user cascades to everything they own. Between app tables there is no cascade (`NO ACTION`), so a client that still has cases cannot be deleted, and the same applies to a case with hearings or deadlines. Use `archived_at` instead.
+- **Enums** for fixed sets of values. Adding a value is easy, removing or renaming one is a painful migration, so values are chosen carefully. Created so far: `case_type`, `case_status`, `hearing_type`, `hearing_status`, `deadline_status`.
 - **Nothing that can be calculated is stored** (see the list at the end).
 
 ---
@@ -135,7 +135,7 @@ Constraints and indexes: `unique(id, user_id)` (needed by the composite foreign 
 
 Constraints and indexes: `unique(id, user_id)` (named `cases_id_user_unique`), `(user_id, client_id)`, `(user_id, status)`, `(user_id, case_number)`, `(user_id, updated_at)`.
 
-**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing". None of these are built yet. The hearing data now exists, so they arrive next (the urgent badge and the next hearing on the case card), together with deadlines.
+**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing". None of these are built yet. Hearing and deadline data now exist, so they arrive next (the urgent badge, the next hearing and the nearest deadline on the case card).
 
 **Deleting:** a case can be deleted only when it has no hearings or deadlines. The composite foreign keys from those tables have no cascade, so the database refuses (code `23503`) and the app shows a friendly message. Otherwise the case is archived.
 
@@ -179,7 +179,7 @@ Indexes: `hearings_user_hearing_at_idx` on `(user_id, hearing_at)` for the dashb
 
 ---
 
-## 7. deadlines (next)
+## 7. deadlines [x]
 
 Non-hearing dates, such as the last day to file an appeal or a defense memo.
 
@@ -196,11 +196,18 @@ Non-hearing dates, such as the last day to file an appeal or a defense memo.
 | reminder_sent_at       | timestamptz       | null until the reminder was sent          |
 | created_at, updated_at | timestamptz       |                                           |
 
-Indexes: `(user_id, due_date)` and `(case_id)`.
+Indexes: `deadlines_user_due_date_idx` on `(user_id, due_date)` and `deadlines_case_idx` on `(case_id)`. The composite FK is named `deadlines_case_owner_fk`.
 
-The composite FK to `cases` has **no cascade**, same as hearings.
+The composite FK to `cases` has **no cascade**, same as hearings. Verified: a case with deadlines cannot be deleted.
 
-"Overdue" is calculated: `pending` and `due_date` earlier than today in the lawyer's time zone.
+"Overdue" is calculated: `pending` and `due_date` earlier than today in the lawyer's time zone (`todayIn(timeZone)`), never stored.
+
+**Notes**
+
+- Only a `pending` deadline can be edited. Marking it done sets `completed_at`; reopening clears it. Both only change the opposite state, so a double click does nothing.
+- When `due_date` changes, `reminder_sent_at` is reset to null (nothing sends reminders yet).
+- Every change touches `cases.updated_at` in the same `db.batch`.
+- `due_date` is a `date` read as a string, so no time zone can shift it.
 
 ---
 
@@ -268,6 +275,7 @@ Files stay in private storage and are opened through short-lived signed links, g
 - Payments redefined with due dates, and the agreed fee moved onto the case.
 - Hard delete of a client with cases (or a case with hearings/deadlines) is blocked, archiving was added.
 - Hearings built as designed, plus the order rule, "edit only while scheduled" and a 90-minute conflict window.
+- Deadlines built as designed, plus "edit only while pending" and reopening.
 
 ## Open questions
 
