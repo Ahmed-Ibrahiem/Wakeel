@@ -11,13 +11,12 @@ import {
   isNull,
   or,
   asc,
+  sql,
   SQL,
 } from "drizzle-orm";
-import { cases, clients } from "@/db/schema";
+import { cases, clients, deadlines, hearings } from "@/db/schema";
 import { db } from "@/db";
 import { escapeLike, first, type RawParams } from "@/lib/query-utils";
-
-
 
 // A case is always joined to its client through BOTH id and user_id
 const clientJoin = and(
@@ -38,6 +37,35 @@ const caseColumns = {
   archivedAt: cases.archivedAt,
   updatedAt: cases.updatedAt,
 };
+
+// Calculated per case inside the same query (never stored), only for the list.
+// Earliest still-scheduled hearing: in the past means it has no decision yet.
+const nextHearingAt = sql<Date | null>`
+  (select min(${hearings.hearingAt}) from ${hearings}
+   where ${hearings.caseId} = ${cases.id}
+   and ${hearings.userId} = ${cases.userId}
+   and ${hearings.status} = 'scheduled')
+`
+  .mapWith(hearings.hearingAt)
+  .as("next_hearing_at");
+
+// Latest hearing that already has a decision
+const lastHearingAt = sql<Date | null>`
+  (select max(${hearings.hearingAt}) from ${hearings}
+   where ${hearings.caseId} = ${cases.id}
+   and ${hearings.userId} = ${cases.userId}
+   and ${hearings.status} <> 'scheduled')
+`
+  .mapWith(hearings.hearingAt)
+  .as("last_hearing_at");
+
+// Earliest pending deadline (an overdue one comes first, which is what we want)
+const nextDeadlineDate = sql<string | null>`
+  (select min(${deadlines.dueDate}) from ${deadlines}
+   where ${deadlines.caseId} = ${cases.id}
+   and ${deadlines.userId} = ${cases.userId}
+   and ${deadlines.status} = 'pending')
+`.as("next_deadline_date");
 
 export const casesList = async (raw: RawParams) => {
   const { user } = await requireSession();
@@ -80,7 +108,7 @@ export const casesList = async (raw: RawParams) => {
   const currentPage = Math.min(page, totalPages);
 
   const items = await db
-    .select(caseColumns)
+    .select({ ...caseColumns, nextHearingAt, lastHearingAt, nextDeadlineDate })
     .from(cases)
     .innerJoin(clients, clientJoin)
     .where(where)

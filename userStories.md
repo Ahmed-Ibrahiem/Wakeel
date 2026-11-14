@@ -49,11 +49,13 @@ Check each story off once it's fully built and working.
 - [x] **As a** lawyer, **I want to** browse all my cases, filter them by status, and search by case number or client name, **so that** I can find a case quickly. `v1`
 - [x] **As a** lawyer, **I want to** add free-text notes to a case after each session, **so that** I remember what happened and what the judge said. `v1` (a general notes field on the case, plus the decision and notes on each hearing)
 - [x] **As a** lawyer, **I want to** open a case and see its hearings, deadlines and notes together, **so that** I have the full picture on one screen. `v1`
-- [ ] **As a** lawyer, **I want to** see a case marked **urgent** when it has a hearing or deadline within 48 hours, **so that** I notice it without checking dates. `v1`
-- [ ] **As a** lawyer, **I want to** be warned when an ongoing case has no upcoming hearing, **so that** I don't forget to schedule the next session. `v1`
+- [x] **As a** lawyer, **I want to** see a case marked **urgent** when it has a hearing or deadline within 48 hours, **so that** I notice it without checking dates. `v1`
+- [x] **As a** lawyer, **I want to** be warned when an ongoing case has no upcoming hearing, **so that** I don't forget to schedule the next session. `v1`
 - [x] **As a** lawyer, **I want to** edit, archive or delete a case (delete only when it has no hearings or deadlines), **so that** my list stays accurate. `v1`
 
-> "Urgent" is calculated from upcoming dates. It is not a status and not a field the lawyer fills in.
+> "Urgent" is calculated from upcoming dates. It is not a status and not a field the lawyer fills in. A case is urgent when its earliest scheduled hearing is within 48 hours **or already past without a decision**, or when a pending deadline is due within 2 days **or already overdue**. Closed and archived cases are never urgent.
+>
+> The case card shows the next hearing (amber "hearing without a decision" if its time has passed), the nearest pending deadline (red if overdue), and an amber "no upcoming hearing" for an ongoing case with no scheduled hearing.
 
 ## 6. Hearings & Deadlines (Core Feature)
 
@@ -119,10 +121,11 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 **v1 (feedback version)**
 - [x] Authentication, landing page
 - [x] Clients (the "latest case", active/inactive and client details page parts wait for hearings and a client page)
-- [x] Cases (the urgent badge and hearing-related parts arrive with hearings)
+- [x] Cases (list, form, details, delete, duplicate warning)
+- [x] Case card signals (next hearing, nearest deadline, urgent badge, "no upcoming hearing" warning)
 - [x] Hearings (create, edit, delete, decision + next hearing in one step, conflict warning)
 - [x] Deadlines (create, edit, delete, mark done / reopen, overdue grouping)
-- [ ] Email reminders for hearings and deadlines, urgent badge and next hearing on the case card
+- [ ] Email reminders for hearings and deadlines
 - [ ] Dashboard (hearings, deadlines, caseload, recent cases)
 - [ ] Settings (reminders, time zone)
 
@@ -136,7 +139,7 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 
 ## Design decisions
 
-1. **"Urgent" is calculated**, not a status: a case can be ongoing and urgent at once.
+1. **"Urgent" is calculated**, not a status: a case can be ongoing and urgent at once. The badge sits next to the status badge, it does not replace it (see the note in section 5 for the exact rule).
 2. **Case status** is `ongoing / postponed / closed`, plus an optional judgment date. Appeal dates live in deadlines.
 3. **Client status is calculated** (active when they have an open case).
 4. **The update description is postponed.** v1 shows "last updated" only.
@@ -152,5 +155,6 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 14. **Hearings:** a decision plus the next date is one step (old hearing becomes `postponed`, a new `scheduled` one is created; with no next date the old one becomes `completed`). Only `scheduled` hearings are editable, and a scheduled hearing must come after the last decided one.
 15. **Close hearings** (within 90 minutes) trigger a confirmation, not a block.
 16. **Deadlines** are a calendar date with a title. Marking one done or reopening it needs no confirmation; only pending deadlines are editable; "overdue" is calculated from the lawyer's today.
+17. **Overdue things count as urgent:** a hearing in the past with no decision, and a pending deadline whose date has passed, keep the case marked urgent until they are handled.
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).

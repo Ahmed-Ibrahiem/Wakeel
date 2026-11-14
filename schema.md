@@ -135,7 +135,7 @@ Constraints and indexes: `unique(id, user_id)` (needed by the composite foreign 
 
 Constraints and indexes: `unique(id, user_id)` (named `cases_id_user_unique`), `(user_id, client_id)`, `(user_id, status)`, `(user_id, case_number)`, `(user_id, updated_at)`.
 
-**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing". None of these are built yet. Hearing and deadline data now exist, so they arrive next (the urgent badge, the next hearing and the nearest deadline on the case card).
+**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing". The case list computes them in the same query with subqueries (earliest `scheduled` hearing, latest decided hearing, earliest `pending` deadline), and `features/cases/signals.ts` turns them into the urgent badge, the card footer and the warning. They use the existing indexes `(case_id, hearing_at)` and `(case_id)`.
 
 **Deleting:** a case can be deleted only when it has no hearings or deadlines. The composite foreign keys from those tables have no cascade, so the database refuses (code `23503`) and the app shows a friendly message. Otherwise the case is archived.
 
