@@ -5,3 +5,4 @@ export * from "./clients";
 export * from "./enums";
 export * from "./cases";
 export * from "./hearings"
+export * from "./deadlines";

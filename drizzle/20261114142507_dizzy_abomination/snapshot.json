@@ -1,0 +1,446 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "6d883e46-b286-40e3-bbf0-1731afd020dc",
+  "prevIds": [
+    "7b6a1189-f094-409a-96e3-9e9f1ee17335"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "deadline_status"
+      ],
+      "writes": [
+        "s|enum|public.deadline_status",
+        "n|enum|public.deadline_status",
+        "e|enum|public.deadline_status",
+        "n|type|public.deadline_status"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "deadlines"
+      ],
+      "writes": [
+        "s|tbl|public.deadlines",
+        "n|tbl|public.deadlines",
+        "e|tbl|public.deadlines",
+        "n|rel|public.deadlines",
+        "n|type|public.deadlines",
+        "n|rel|public.deadlines_pkey"
+      ],
+      "reads": [
+        "n|sch|public",
+        "n|enum|public.deadline_status"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "deadlines",
+        "deadlines_user_due_date_idx"
+      ],
+      "writes": [
+        "s|idx|public.deadlines_user_due_date_idx",
+        "n|idx|public.deadlines_user_due_date_idx",
+        "e|idx|public.deadlines_user_due_date_idx",
+        "n|rel|public.deadlines_user_due_date_idx"
+      ],
+      "reads": [
+        "n|tbl|public.deadlines",
+        "n|sch|public",
+        "n|col|public.deadlines.user_id",
+        "n|col|public.deadlines.due_date"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "deadlines",
+        "deadlines_case_idx"
+      ],
+      "writes": [
+        "s|idx|public.deadlines_case_idx",
+        "n|idx|public.deadlines_case_idx",
+        "e|idx|public.deadlines_case_idx",
+        "n|rel|public.deadlines_case_idx"
+      ],
+      "reads": [
+        "n|tbl|public.deadlines",
+        "n|sch|public",
+        "n|col|public.deadlines.case_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "deadlines"
+      ],
+      "writes": [
+        "s|fk|public.deadlines.deadlines_user_id_user_id_fkey",
+        "n|fk|public.deadlines.deadlines_user_id_user_id_fkey",
+        "e|fk|public.deadlines.deadlines_user_id_user_id_fkey",
+        "n|con|public.deadlines.deadlines_user_id_user_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.deadlines",
+        "n|sch|public",
+        "n|tbl|public.user",
+        "n|sch|public",
+        "n|col|public.deadlines.user_id",
+        "n|col|public.user.id",
+        "e|uniqueness|public.user.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "deadlines"
+      ],
+      "writes": [
+        "s|fk|public.deadlines.deadlines_case_owner_fk",
+        "n|fk|public.deadlines.deadlines_case_owner_fk",
+        "e|fk|public.deadlines.deadlines_case_owner_fk",
+        "n|con|public.deadlines.deadlines_case_owner_fk"
+      ],
+      "reads": [
+        "n|tbl|public.deadlines",
+        "n|sch|public",
+        "n|tbl|public.cases",
+        "n|sch|public",
+        "n|col|public.deadlines.case_id",
+        "n|col|public.deadlines.user_id",
+        "n|col|public.cases.id",
+        "n|col|public.cases.user_id",
+        "e|uniqueness|public.cases.id.user_id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "deadlines",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "deadline_status",
+        "values": [
+          "pending",
+          "done"
+        ],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "user_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "case_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "title",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "due_date",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "status",
+        "type": "deadline_status",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'pending'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "completed_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "notes",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "reminder_sent_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "deadlines_user_due_date_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "user_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "due_date",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "deadlines_case_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "case_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "deadlines_user_id_user_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "user_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "user",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "deadlines_case_owner_fk",
+        "nameExplicit": true,
+        "columns": [
+          "case_id",
+          "user_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "cases",
+        "columnsTo": [
+          "id",
+          "user_id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "NO ACTION",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "deadlines",
+        "name": "deadlines_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    }
+  ]
+}

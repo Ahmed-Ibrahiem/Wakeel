@@ -11,6 +11,7 @@ import {
 } from "@/features/cases/labels";
 import { Suspense } from "react";
 import { HearingsSection } from "@/features/hearings/components/HearingsSection";
+import { DeadlinesSection } from "@/features/deadlines/components/DeadlinesSection";
 
 type Params = Promise<{ id: string }>;
 
@@ -24,7 +25,7 @@ function Item({
   return (
     <div>
       <p className="text-xs text-muted-foreground">{label}</p>
-      <div className="mt-1 text-sm font-medium break-words">{children}</div>
+      <div className="mt-1 text-sm font-medium wrap-break-word">{children}</div>
     </div>
   );
 }
@@ -101,6 +102,14 @@ export default async function CaseDetailsPage({ params }: { params: Params }) {
         }
       >
         <HearingsSection caseId={item.id} />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <div className="h-32 animate-pulse rounded-xl border bg-muted/40" />
+        }
+      >
+        <DeadlinesSection caseId={item.id} />
       </Suspense>
     </div>
   );
