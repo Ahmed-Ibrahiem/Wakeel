@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { optionalText, requiredText } from "@/lib/validations/text";
+import {
+  optionalText,
+  requiredMultilineText,
+  requiredText,
+} from "@/lib/validations/text";
 
 // Keep in sync with db/schema/enums.ts (TypeScript will complain on insert if they drift)
 export const CASE_TYPES = [
@@ -12,8 +16,6 @@ export const CASE_TYPES = [
 ] as const;
 export const CASE_STATUSES = ["ongoing", "postponed", "closed"] as const;
 export const DEFAULT_PAGE_SIZE = 8;
-
-
 
 export const caseIdSchema = z.uuid();
 
@@ -35,7 +37,7 @@ export const caseFormSchema = z.object({
   clientId: z.uuid("اختر الموكل"),
   caseNumber: requiredText("رقم القضية", 50),
   caseType: z.enum(CASE_TYPES, "نوع القضية غير صالح"),
-  courtName: requiredText("اسم المحكمة", 120),
+  courtName: requiredText("اسم المحكمة مطلوب", 120),
   opposingParty: optionalText("اسم الخصم", 120),
   status: z.enum(CASE_STATUSES, "حالة القضية غير صالحة"),
   judgmentDate: z.union([z.literal(""), z.iso.date("التاريخ غير صالح")]),

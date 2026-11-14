@@ -67,9 +67,8 @@ export async function createClient(input: unknown) {
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   // 4) Rules depending on the lawyer himself (his timing)
-  const settings = await getUserSettings(user.id);
-  const timezone = settings?.timeZone ?? "UTC";
-  const prepared = prepare(parsed.data, timezone);
+  const { timeZone } = await getUserSettings(user.id);
+  const prepared = prepare(parsed.data, timeZone);
   if (!prepared.ok) return fail(prepared.error);
 
   // 5) Writing, and userId from the session
@@ -103,9 +102,8 @@ export async function updateClient(id: string, input: unknown) {
   ]);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
-  const settings = await getUserSettings(user.id);
-  const timezone = settings?.timeZone ?? "UTC";
-  const prepared = prepare(parsed.data, timezone);
+  const { timeZone } = await getUserSettings(user.id);
+  const prepared = prepare(parsed.data, timeZone);
   if (!prepared.ok) return fail(prepared.error);
 
   let updated: { id: string } | undefined;

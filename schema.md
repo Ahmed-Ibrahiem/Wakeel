@@ -19,8 +19,8 @@ user (Better Auth)                        [x]
   ├── user_settings                       [x]
   └── clients                             [x]
         └── cases                         [x]
-              ├── hearings                [ ]  next
-              ├── deadlines               [ ]  draft
+              ├── hearings                [x]
+              ├── deadlines               [ ]  next
               ├── payments                [ ]  v1.1
               └── documents               [ ]  v1.2
 
@@ -40,8 +40,8 @@ Every app table (clients, cases, hearings, deadlines, payments, documents) carri
 - **Calendar dates** (no time of day) use `date` and are read as strings (`"2026-11-05"`), so they never shift a day because of a time zone.
 - **Naming:** `snake_case` in the database, `camelCase` in TypeScript.
 - **Ownership is enforced twice.** Every app table has `user_id`, and a child table references its parent with a composite foreign key `(parent_id, user_id)`. A case can therefore never point at another lawyer's client, even if the application code has a bug. Queries must still filter by the `user_id` of the current session.
-- **Deletes:** deleting a user cascades to everything they own. Between app tables there is no cascade (`NO ACTION`), so a client that still has cases cannot be deleted, and the same will apply to a case with hearings or deadlines. Use `archived_at` instead.
-- **Enums** for fixed sets of values. Adding a value is easy, removing or renaming one is a painful migration, so values are chosen carefully. Created so far: `case_type`, `case_status`. The hearing and deadline enums come with their features.
+- **Deletes:** deleting a user cascades to everything they own. Between app tables there is no cascade (`NO ACTION`), so a client that still has cases cannot be deleted, and the same applies to a case with hearings (and later deadlines). Use `archived_at` instead.
+- **Enums** for fixed sets of values. Adding a value is easy, removing or renaming one is a painful migration, so values are chosen carefully. Created so far: `case_type`, `case_status`, `hearing_type`, `hearing_status`. The deadline enum comes with its feature.
 - **Nothing that can be calculated is stored** (see the list at the end).
 
 ---
@@ -135,7 +135,7 @@ Constraints and indexes: `unique(id, user_id)` (needed by the composite foreign 
 
 Constraints and indexes: `unique(id, user_id)` (named `cases_id_user_unique`), `(user_id, client_id)`, `(user_id, status)`, `(user_id, case_number)`, `(user_id, updated_at)`.
 
-**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing". None of these are built yet; they arrive with hearings and deadlines.
+**Calculated, not stored:** next and last hearing, **urgent** (a hearing or deadline within 48 hours), and the warning "ongoing case with no upcoming hearing". None of these are built yet. The hearing data now exists, so they arrive next (the urgent badge and the next hearing on the case card), together with deadlines.
 
 **Deleting:** a case can be deleted only when it has no hearings or deadlines. The composite foreign keys from those tables have no cascade, so the database refuses (code `23503`) and the app shows a friendly message. Otherwise the case is archived.
 
@@ -148,7 +148,7 @@ Constraints and indexes: `unique(id, user_id)` (named `cases_id_user_unique`), `
 
 ---
 
-## 6. hearings (next)
+## 6. hearings [x]
 
 | Column                 | Type              | Notes                                         |
 | ---------------------- | ----------------- | --------------------------------------------- |
@@ -156,8 +156,8 @@ Constraints and indexes: `unique(id, user_id)` (named `cases_id_user_unique`), `
 | user_id                | text FK → user.id | owner                                         |
 | case_id                | uuid              | composite FK `(case_id, user_id)` → cases     |
 | hearing_at             | timestamptz       | the exact moment of the session               |
-| type                   | enum              | `pleading` \| `ruling` \| `other`             |
-| status                 | enum              | `scheduled` \| `completed` \| `postponed`     |
+| type                   | enum              | `pleading` \| `ruling` \| `other`, default `pleading` |
+| status                 | enum              | `scheduled` \| `completed` \| `postponed`, default `scheduled` |
 | location               | text              | only when different from the case's court     |
 | outcome                | text              | the decision taken at the session             |
 | notes                  | text              | what happened, what the judge said            |
@@ -165,18 +165,21 @@ Constraints and indexes: `unique(id, user_id)` (named `cases_id_user_unique`), `
 | reminder_hours_sent_at | timestamptz       | null until the hours-before reminder was sent |
 | created_at, updated_at | timestamptz       |                                               |
 
-Indexes: `(user_id, hearing_at)` for the dashboard, reminders and conflict checks, and `(case_id, hearing_at)` for a case's timeline.
+Indexes: `hearings_user_hearing_at_idx` on `(user_id, hearing_at)` for the dashboard, reminders and conflict checks, and `hearings_case_hearing_at_idx` on `(case_id, hearing_at)` for a case's timeline. The composite FK is named `hearings_case_owner_fk`.
 
 **Notes**
 
-- The composite FK to `cases` has **no cascade** (default `NO ACTION`), so a case with hearings cannot be deleted.
-- **Postponing** a hearing means: mark the old one `postponed` and create a new `scheduled` one. Recording the outcome and the next date happens in a single step in the UI.
-- When `hearing_at` changes, both `reminder_*_sent_at` columns are reset to null, otherwise a reminder already sent for the old date would block the new one.
-- **Conflict check** (application code, not a database constraint): other `scheduled` hearings of the same lawyer within a time window around the new `hearing_at`. Location-based checks ("same day but far apart") come later.
+- The composite FK to `cases` has **no cascade** (default `NO ACTION`), so a case with hearings cannot be deleted. Verified: `deleteCase` is refused with `23503` once a case has a hearing.
+- **Postponing** a hearing means: mark the old one `postponed` and create a new `scheduled` one. Recording the outcome and the next date happens in a single step in the UI, and in a single `db.batch` on the server (it also touches `cases.updated_at`). With no next date, the old hearing becomes `completed`.
+- **Only a `scheduled` hearing can be edited.** A hearing that already has a decision can only be deleted.
+- **Order rule** (application code): a `scheduled` hearing must be later than the latest `postponed` or `completed` hearing of the same case. It is checked on create, on update and when recording the next hearing, so the timeline cannot go backwards. Consequence: old history must be entered oldest first.
+- When `hearing_at` changes, both `reminder_*_sent_at` columns are reset to null, otherwise a reminder already sent for the old date would block the new one. (Nothing sends reminders yet, the columns stay empty until the reminders feature.)
+- **Conflict check** (application code, not a database constraint): other `scheduled` hearings of the same lawyer within 90 minutes before or after the new `hearing_at` (`CONFLICT_WINDOW_MINUTES`). It is a confirmation, not a block, because two hearings can legitimately be close. Location-based checks ("same day but far apart") come later.
+- **Time zone:** the form sends a date and a time as strings; the server turns them into one UTC instant using the lawyer's zone name from `user_settings` (`lib/zoned-time.ts`, DST-safe). A time skipped by a clock change is rejected.
 
 ---
 
-## 7. deadlines (draft)
+## 7. deadlines (next)
 
 Non-hearing dates, such as the last day to file an appeal or a defense memo.
 
@@ -264,6 +267,7 @@ Files stay in private storage and are opened through short-lived signed links, g
 - Documents use `storage_key` in private storage instead of a public `file_url`.
 - Payments redefined with due dates, and the agreed fee moved onto the case.
 - Hard delete of a client with cases (or a case with hearings/deadlines) is blocked, archiving was added.
+- Hearings built as designed, plus the order rule, "edit only while scheduled" and a 90-minute conflict window.
 
 ## Open questions
 

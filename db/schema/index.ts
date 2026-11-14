@@ -4,3 +4,4 @@ export * from "./action-rate-limits";
 export * from "./clients";
 export * from "./enums";
 export * from "./cases";
+export * from "./hearings"
