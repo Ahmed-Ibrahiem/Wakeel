@@ -1,19 +1,19 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
 import { InputWithLabel } from "@/components/inputs/InputWithLabel";
-import { Button } from "../ui/button";
-import Link from "next/link";
-import { Field, FieldSeparator } from "../ui/field";
-import { BiLoaderAlt } from "react-icons/bi";
-import Image from "next/image";
-import { signIn } from "@/server/users";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { signInSchema, SignInValues } from "@/lib/validations/auth";
-import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { signInSchema, SignInValues } from "@/lib/validations/auth";
+import { signIn } from "@/server/users";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { BiLoaderAlt } from "react-icons/bi";
+import { toast } from "sonner";
 import { PasswordWithLabel } from "../inputs/PasswordWithLabel";
+import { Button } from "../ui/button";
+import { Field, FieldSeparator } from "../ui/field";
 
 const LoginForm = () => {
   const router = useRouter();

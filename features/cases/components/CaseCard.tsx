@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { Briefcase, CalendarDays, ChevronLeft, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Briefcase, CalendarDays, ChevronLeft } from "lucide-react";
+import Link from "next/link";
 import {
   CASE_STATUS_LABELS,
   CASE_STATUS_STYLES,

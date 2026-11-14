@@ -3,37 +3,22 @@
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { cases, deadlines } from "@/db/schema";
+import { deadlines } from "@/db/schema";
 import { requireSession } from "@/lib/session"; // same imports as hearings/actions.ts
-import { checkRateLimits, limitMessage } from "@/lib/rateLimit";
+import { limitMessage, limitedPerHour } from "@/lib/rateLimit";
 import { caseIdSchema } from "@/features/cases/schemas";
 import {
   deadlineFormSchema,
   deadlineIdSchema,
   type DeadlineFormValues,
 } from "./schemas";
+import { fail, GENERIC_ERROR } from "@/lib/action-result";
+import { ownsCase, touchCase } from "@/features/cases/internal";
 
 type Result = { success: true } | { success: false; message: string };
 
-const fail = (message: string): Result => ({ success: false, message });
-const GENERIC_ERROR = "حصلت مشكلة غير متوقعة. حاول تاني.";
-
-// One hourly bucket per action name and user
-const limited = (name: string, userId: string, max: number) =>
-  checkRateLimits([{ name, id: userId, max, windowSec: 3600 }]);
-
 const caseNotFound = () => fail("القضية غير موجودة");
 const deadlineNotFound = () => fail("الموعد غير موجود");
-
-// Same lawyer only: a case id from another account is "not found".
-async function ownsCase(caseId: string, userId: string) {
-  const [row] = await db
-    .select({ id: cases.id })
-    .from(cases)
-    .where(and(eq(cases.id, caseId), eq(cases.userId, userId)))
-    .limit(1);
-  return !!row;
-}
 
 async function getOwnDeadline(id: string, userId: string) {
   const [row] = await db
@@ -49,13 +34,6 @@ async function getOwnDeadline(id: string, userId: string) {
   return row ?? null;
 }
 
-// Keeps "recently updated cases" accurate. Always runs in the same db.batch as the change.
-const touchCase = (caseId: string, userId: string) =>
-  db
-    .update(cases)
-    .set({ updatedAt: new Date() })
-    .where(and(eq(cases.id, caseId), eq(cases.userId, userId)));
-
 export async function createDeadline(
   caseId: string,
   input: DeadlineFormValues,
@@ -67,7 +45,7 @@ export async function createDeadline(
   const parsed = deadlineFormSchema.safeParse(input);
   if (!parsed.success) return fail("البيانات غير صالحة");
 
-  const limit = await limited("deadline-create", userId, 200);
+  const limit = await limitedPerHour("deadline-create", userId, 200);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   try {
@@ -103,7 +81,7 @@ export async function updateDeadline(
   const parsed = deadlineFormSchema.safeParse(input);
   if (!parsed.success) return fail("البيانات غير صالحة");
 
-  const limit = await limited("deadline-update", userId, 400);
+  const limit = await limitedPerHour("deadline-update", userId, 400);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   let caseId: string;
@@ -148,7 +126,7 @@ export async function deleteDeadline(id: string): Promise<Result> {
 
   if (!deadlineIdSchema.safeParse(id).success) return deadlineNotFound();
 
-  const limit = await limited("deadline-update", userId, 400);
+  const limit = await limitedPerHour("deadline-update", userId, 400);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   let caseId: string;
@@ -181,7 +159,7 @@ async function setDone(id: string, done: boolean): Promise<Result> {
 
   if (!deadlineIdSchema.safeParse(id).success) return deadlineNotFound();
 
-  const limit = await limited("deadline-update", userId, 400);
+  const limit = await limitedPerHour("deadline-update", userId, 400);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   let caseId: string;
@@ -210,7 +188,9 @@ async function setDone(id: string, done: boolean): Promise<Result> {
       touchCase(caseId, userId),
     ]);
     if (updated.length === 0) {
-      return fail(done ? "هذا الموعد تم الإنتهاء منه بالفعل" : "هذا الموعد معلّق بالفعل");
+      return fail(
+        done ? "هذا الموعد تم الإنتهاء منه بالفعل" : "هذا الموعد معلّق بالفعل",
+      );
     }
   } catch (error) {
     console.error("setDeadlineDone failed", error);

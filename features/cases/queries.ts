@@ -15,13 +15,9 @@ import {
 } from "drizzle-orm";
 import { cases, clients } from "@/db/schema";
 import { db } from "@/db";
+import { escapeLike, first, type RawParams } from "@/lib/query-utils";
 
-type RawParams = Record<string, string | string[] | undefined>;
 
-const first = (v: string | string[] | undefined) =>
-  Array.isArray(v) ? v[0] : v;
-
-const escapeLike = (s: string) => s.replace(/[\\%_]/g, "\\$&");
 
 // A case is always joined to its client through BOTH id and user_id
 const clientJoin = and(

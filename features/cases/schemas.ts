@@ -1,9 +1,8 @@
-import { z } from "zod";
 import {
   optionalText,
-  requiredMultilineText,
-  requiredText,
+  requiredText
 } from "@/lib/validations/text";
+import { z } from "zod";
 
 // Keep in sync with db/schema/enums.ts (TypeScript will complain on insert if they drift)
 export const CASE_TYPES = [

@@ -1,14 +1,16 @@
 "use server";
 
-import { and, eq, max, ne } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { db } from "@/db";
-import { cases, hearings } from "@/db/schema";
+import { hearings } from "@/db/schema";
+import { caseIdSchema } from "@/features/cases/schemas";
+import { fail, GENERIC_ERROR } from "@/lib/action-result";
+import { limitedPerHour, limitMessage } from "@/lib/rateLimit";
 import { requireSession } from "@/lib/session";
-import { checkRateLimits, limitMessage } from "@/lib/rateLimit";
 import { getUserSettings } from "@/lib/userSettings";
 import { zonedToUtc } from "@/lib/zoned-time";
-import { caseIdSchema } from "@/features/cases/schemas";
+import { and, eq, max, ne } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { ownsCase, touchCase } from "../cases/internal";
 import { findConflicts } from "./queries";
 import {
   hearingFormSchema,
@@ -22,25 +24,8 @@ type Result =
   | { success: true }
   | { success: false; message: string; conflict?: boolean };
 
-const fail = (message: string): Result => ({ success: false, message });
-const GENERIC_ERROR = "حصلت مشكلة غير متوقعة. حاول مرة اخري.";
-
-// One hourly bucket per action name and user
-const limited = (name: string, userId: string, max: number) =>
-  checkRateLimits([{ name, id: userId, max, windowSec: 3600 }]);
-
 const caseNotFound = () => fail("القضية غير موجودة");
 const hearingNotFound = () => fail("الجلسة غير موجودة");
-
-// Same lawyer only: a case id from another account is "not found".
-async function ownsCase(caseId: string, userId: string) {
-  const [row] = await db
-    .select({ id: cases.id })
-    .from(cases)
-    .where(and(eq(cases.id, caseId), eq(cases.userId, userId)))
-    .limit(1);
-  return !!row;
-}
 
 async function getOwnHearing(id: string, userId: string) {
   const [row] = await db
@@ -55,13 +40,6 @@ async function getOwnHearing(id: string, userId: string) {
     .limit(1);
   return row ?? null;
 }
-
-// Keeps "recently updated cases" accurate. Always runs in the same db.batch as the change.
-const touchCase = (caseId: string, userId: string) =>
-  db
-    .update(cases)
-    .set({ updatedAt: new Date() })
-    .where(and(eq(cases.id, caseId), eq(cases.userId, userId)));
 
 const AFTER_HELD_MESSAGE =
   "الجلسة لابد ان تكون بعد آخر جلسة تم تسجيل لها قرار في هذه القضية";
@@ -109,7 +87,7 @@ export async function createHearing(
   const parsed = hearingFormSchema.safeParse(input);
   if (!parsed.success) return fail("البيانات غير صالحة");
 
-  const limit = await limited("hearing-create", userId, 200);
+  const limit = await limitedPerHour("hearing-create", userId, 200);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   try {
@@ -165,7 +143,7 @@ export async function updateHearing(
   const parsed = hearingFormSchema.safeParse(input);
   if (!parsed.success) return fail("البيانات غير صالحة");
 
-  const limit = await limited("hearing-update", userId, 400);
+  const limit = await limitedPerHour("hearing-update", userId, 400);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   let caseId: string;
@@ -232,7 +210,7 @@ export async function deleteHearing(id: string): Promise<Result> {
 
   if (!hearingIdSchema.safeParse(id).success) return hearingNotFound();
 
-  const limit = await limited("hearing-update", userId, 400);
+  const limit = await limitedPerHour("hearing-update", userId, 400);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   let caseId: string;
@@ -273,7 +251,7 @@ export async function recordHearingOutcome(
   const parsed = hearingOutcomeSchema.safeParse(input);
   if (!parsed.success) return fail("البيانات غير صالحة");
 
-  const limit = await limited("hearing-update", userId, 400);
+  const limit = await limitedPerHour("hearing-update", userId, 400);
   if (!limit.ok) return fail(limitMessage(limit.retryAfterSec));
 
   let caseId: string;
