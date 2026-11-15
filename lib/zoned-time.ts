@@ -31,19 +31,33 @@ function wallClock(instant: Date, timeZone: string) {
 // Offset of the zone from UTC at a given instant, in milliseconds.
 function offsetMs(instant: Date, timeZone: string) {
   const p = wallClock(instant, timeZone);
-  const asUtc = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
+  const asUtc = Date.UTC(
+    +p.year,
+    +p.month - 1,
+    +p.day,
+    +p.hour,
+    +p.minute,
+    +p.second,
+  );
   return asUtc - Math.floor(instant.getTime() / 1000) * 1000;
 }
 
 // UTC instant -> { date: "YYYY-MM-DD", time: "HH:mm" } in the given zone.
 export function toZonedParts(instant: Date, timeZone: string) {
   const p = wallClock(instant, timeZone);
-  return { date: `${p.year}-${p.month}-${p.day}`, time: `${p.hour}:${p.minute}` };
+  return {
+    date: `${p.year}-${p.month}-${p.day}`,
+    time: `${p.hour}:${p.minute}`,
+  };
 }
 
 // "YYYY-MM-DD" + "HH:mm" in the given zone -> UTC instant.
 // Returns null for impossible values (e.g. 2026-02-30, or a time skipped by a DST jump).
-export function zonedToUtc(date: string, time: string, timeZone: string): Date | null {
+export function zonedToUtc(
+  date: string,
+  time: string,
+  timeZone: string,
+): Date | null {
   const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
   const t = /^(\d{2}):(\d{2})$/.exec(time);
   if (!d || !t) return null;
@@ -57,4 +71,14 @@ export function zonedToUtc(date: string, time: string, timeZone: string): Date |
   const back = toZonedParts(result, timeZone);
   if (back.date !== date || back.time !== time) return null;
   return result;
+}
+
+// Start of a calendar day in the given zone, as a UTC instant.
+// Midnight can be skipped by a clock change (Egypt springs forward at 00:00), so fall back to 01:00.
+export function dayStartUtc(date: string, timeZone: string): Date {
+  const start =
+    zonedToUtc(date, "00:00", timeZone) ?? zonedToUtc(date, "01:00", timeZone);
+  if (!start)
+    throw new Error(`Cannot resolve the start of ${date} in ${timeZone}`);
+  return start;
 }

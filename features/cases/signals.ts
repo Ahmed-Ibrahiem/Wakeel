@@ -1,4 +1,4 @@
-import { todayIn } from "@/lib/dates";
+import { addDays, todayIn } from "@/lib/dates";
 import { toZonedParts } from "@/lib/zoned-time";
 
 const URGENT_WINDOW_MS = 48 * 60 * 60 * 1000;
@@ -20,11 +20,7 @@ export type CaseSignals = {
   deadline: { date: string; overdue: boolean } | null;
 };
 
-function addDays(isoDate: string, days: number) {
-  const d = new Date(`${isoDate}T00:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
+
 
 const stamp = (at: Date, timeZone: string) => {
   const p = toZonedParts(at, timeZone);
