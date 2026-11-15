@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { TriangleAlert } from "lucide-react";
+import { useEffect } from "react";
+import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/shared/EmptyState";
 
 export default function DashboardError({
   error,
@@ -13,30 +11,21 @@ export default function DashboardError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
   useEffect(() => {
-    console.error(error);
+    // Only the digest reaches the browser in production: the full error stays in the server logs
+    console.error("dashboard error", error.digest ?? error.message);
   }, [error]);
 
   return (
-    <EmptyState
-      icon={TriangleAlert}
-      title="حدث خطأ غير متوقع"
-      description="حاول مرة أخرى. ولو استمرت المشكلة تواصل معنا."
-    >
-      <Button
-        disabled={isPending}
-        onClick={() =>
-          startTransition(() => {
-            router.refresh();
-            reset();
-          })
-        }
-      >
-        إعادة المحاولة
+    <div className="mx-auto flex max-w-md h-full flex-col-center gap-3 py-16 text-center">
+      <AlertTriangle className="size-10 text-amber-600" aria-hidden />
+      <h2 className="text-lg font-bold">حصلت مشكلة أثناء تحميل الصفحة</h2>
+      <p className="text-sm text-muted-foreground">
+        بياناتك بأمان. حاول مرة اخري، واذا استمرت المشكلة حاول مرة اخري لاحقا.
+      </p>
+      <Button onClick={reset} className="rounded-sm!">
+        حاول مرة اخري
       </Button>
-    </EmptyState>
+    </div>
   );
 }
