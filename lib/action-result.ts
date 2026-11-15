@@ -3,4 +3,4 @@ export const fail = (message: string) => ({
   message,
 });
 
-export const GENERIC_ERROR = "حصلت مشكلة غير متوقعة. حاول تاني.";
+export const GENERIC_ERROR = "حدث خطأ غير متوقع. حاول مرة أخري.";

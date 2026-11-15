@@ -82,6 +82,8 @@ Created by a `user.create` hook. `getUserSettings()` creates the row with defaul
 
 The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only make sense in the lawyer's own time.
 
+**Allowed values (enforced in the application, not by a database constraint):** the time zone must be one of the names in `TIME_ZONES` (`features/settings/schemas.ts`, Arab countries plus London, Paris, New York and UTC), because an invalid name makes `Intl` throw a `RangeError` on every page that formats a date. `reminder_days_before` is one of 0, 1, 2, 3, 7 and `reminder_hours_before` one of 0, 1, 2, 3, 6, 12, 24 (0 means no reminder of that kind). `getUserSettings()` throws if the row can neither be read nor created.
+
 ---
 
 ## 3. action_rate_limits [x]
