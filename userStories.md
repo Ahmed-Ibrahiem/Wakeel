@@ -94,8 +94,8 @@ Check each story off once it's fully built and working.
 
 ## 10. Settings
 
-- [ ] **As a** lawyer, **I want to** set how many days/hours before a hearing I get reminded, **so that** the reminders match how far ahead I like to prepare. `v1`
-- [ ] **As a** lawyer, **I want to** set my time zone, **so that** "today" and reminder times are correct for me. `v1`
+- [x] **As a** lawyer, **I want to** set how many days/hours before a hearing I get reminded, **so that** the reminders match how far ahead I like to prepare. `v1` (the preference is saved; the reminders themselves are not sent yet)
+- [x] **As a** lawyer, **I want to** set my time zone, **so that** "today" and reminder times are correct for me. `v1` (changing it only changes how dates are shown, saved hearings keep their exact moment)
 - [ ] **As a** lawyer, **I want to** change my password and my email, **so that** I can keep my account secure. `later`
 - [ ] **As a** lawyer, **I want to** delete my account and my data, **so that** I stay in control of client information. `later`
 
@@ -127,7 +127,7 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 - [x] Deadlines (create, edit, delete, mark done / reopen, overdue grouping)
 - [ ] Email reminders for hearings and deadlines
 - [x] Dashboard (hearings, deadlines, caseload, recent cases)
-- [ ] Settings (reminders, time zone)
+- [x] Settings (reminder preferences, time zone)
 
 **v1.1** Billing: agreed fee, payments with due dates, overdue and outstanding widgets.
 
@@ -155,6 +155,7 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 14. **Hearings:** a decision plus the next date is one step (old hearing becomes `postponed`, a new `scheduled` one is created; with no next date the old one becomes `completed`). Only `scheduled` hearings are editable, and a scheduled hearing must come after the last decided one.
 15. **Close hearings** (within 90 minutes) trigger a confirmation, not a block.
 16. **Deadlines** are a calendar date with a title. Marking one done or reopening it needs no confirmation; only pending deadlines are editable; "overdue" is calculated from the lawyer's today.
+19. **Settings:** the time zone is chosen from a fixed list (an invalid name would break every date on screen), and the reminder timing from fixed options, with "none" available for both. Changing the zone never moves a saved hearing.
 18. **Dashboard:** the four cards are ongoing cases, today's hearings, hearings in the next 7 days (not a calendar week, to avoid the question of which day a week starts) and pending deadlines (with the overdue ones counted apart). The billing card and widget wait for v1.1. Archived cases never count. Past hearings that are still "scheduled" get their own box, otherwise nobody would see them.
 17. **Overdue things count as urgent:** a hearing in the past with no decision, and a pending deadline whose date has passed, keep the case marked urgent until they are handled.
 

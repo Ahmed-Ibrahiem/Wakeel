@@ -42,6 +42,6 @@ export const navItems: NavItem[] = [
     href: "/dashboard/settings",
     label: "الإعدادات",
     icon: Settings,
-    enabled: false,
+    enabled: true,
   },
 ];
