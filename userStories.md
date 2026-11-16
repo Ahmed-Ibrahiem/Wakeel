@@ -61,9 +61,9 @@ Check each story off once it's fully built and working.
 
 - [x] **As a** lawyer, **I want to** set a hearing date for a case, **so that** it appears on my dashboard. `v1` (the hearing is saved and shown in the case; the dashboard itself comes later)
 - [x] **As a** lawyer, **I want to** record a session's decision and set the next hearing date in one step, **so that** the daily routine after court takes seconds. `v1`
-- [ ] **As a** lawyer, **I want to** get an email reminder before a hearing (for example 1 day before and a few hours before), **so that** I never miss a court session. `v1` (the reminder columns exist, nothing sends yet)
+- [x] **As a** lawyer, **I want to** get an email reminder before a hearing (for example 1 day before and a few hours before), **so that** I never miss a court session. `v1` (built and tested in development; production needs a verified sending domain and the scheduler)
 - [x] **As a** lawyer, **I want to** get warned if two hearings are scheduled too close together, **so that** I don't accidentally double-book myself. `v1`
-- [ ] **As a** lawyer, **I want to** track non-hearing deadlines too (last date to file an appeal or a defense memo), with reminders, **so that** I don't lose a case permanently over a missed paperwork deadline. `v1` (deadlines are built: add, edit, delete, overdue / upcoming / done groups; the reminders are not)
+- [ ] **As a** lawyer, **I want to** track non-hearing deadlines too (last date to file an appeal or a defense memo), with reminders, **so that** I don't lose a case permanently over a missed paperwork deadline. `v1` (deadlines are built: add, edit, delete, overdue / upcoming / done groups; the reminder email arrives N days before the due date)
 - [x] **As a** lawyer, **I want to** mark a deadline as done, **so that** it stops appearing as pending. `v1` (and reopen it if it was a mistake)
 - [ ] **As a** lawyer, **I want to** see all my upcoming dates in a calendar view (monthly/weekly), **so that** I get a full picture of my schedule. `v1.2`
 
@@ -94,7 +94,7 @@ Check each story off once it's fully built and working.
 
 ## 10. Settings
 
-- [x] **As a** lawyer, **I want to** set how many days/hours before a hearing I get reminded, **so that** the reminders match how far ahead I like to prepare. `v1` (the preference is saved; the reminders themselves are not sent yet)
+- [x] **As a** lawyer, **I want to** set how many days/hours before a hearing I get reminded, **so that** the reminders match how far ahead I like to prepare. `v1` (the preference is saved and used by the reminder job)
 - [x] **As a** lawyer, **I want to** set my time zone, **so that** "today" and reminder times are correct for me. `v1` (changing it only changes how dates are shown, saved hearings keep their exact moment)
 - [ ] **As a** lawyer, **I want to** change my password and my email, **so that** I can keep my account secure. `later`
 - [ ] **As a** lawyer, **I want to** delete my account and my data, **so that** I stay in control of client information. `later`
@@ -125,7 +125,7 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 - [x] Case card signals (next hearing, nearest deadline, urgent badge, "no upcoming hearing" warning)
 - [x] Hearings (create, edit, delete, decision + next hearing in one step, conflict warning)
 - [x] Deadlines (create, edit, delete, mark done / reopen, overdue grouping)
-- [ ] Email reminders for hearings and deadlines
+- [x] Email reminders for hearings and deadlines (go-live needs a verified domain and the scheduler)
 - [x] Dashboard (hearings, deadlines, caseload, recent cases)
 - [x] Settings (reminder preferences, time zone)
 
@@ -155,8 +155,9 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 14. **Hearings:** a decision plus the next date is one step (old hearing becomes `postponed`, a new `scheduled` one is created; with no next date the old one becomes `completed`). Only `scheduled` hearings are editable, and a scheduled hearing must come after the last decided one.
 15. **Close hearings** (within 90 minutes) trigger a confirmation, not a block.
 16. **Deadlines** are a calendar date with a title. Marking one done or reopening it needs no confirmation; only pending deadlines are editable; "overdue" is calculated from the lawyer's today.
-19. **Settings:** the time zone is chosen from a fixed list (an invalid name would break every date on screen), and the reminder timing from fixed options, with "none" available for both. Changing the zone never moves a saved hearing.
-18. **Dashboard:** the four cards are ongoing cases, today's hearings, hearings in the next 7 days (not a calendar week, to avoid the question of which day a week starts) and pending deadlines (with the overdue ones counted apart). The billing card and widget wait for v1.1. Archived cases never count. Past hearings that are still "scheduled" get their own box, otherwise nobody would see them.
 17. **Overdue things count as urgent:** a hearing in the past with no decision, and a pending deadline whose date has passed, keep the case marked urgent until they are handled.
+18. **Dashboard:** the four cards are ongoing cases, today's hearings, hearings in the next 7 days (not a calendar week, to avoid the question of which day a week starts) and pending deadlines (with the overdue ones counted apart). The billing card and widget wait for v1.1. Archived cases never count. Past hearings that are still "scheduled" get their own box, otherwise nobody would see them.
+19. **Settings:** the time zone is chosen from a fixed list (an invalid name would break every date on screen), and the reminder timing from fixed options, with "none" available for both. Changing the zone never moves a saved hearing.
+20. **Reminders:** an email goes out once per reminder, never for something already past; day-based reminders arrive from 08:00 in the lawyer's own time zone, hour-based ones inside the chosen window; deadlines have a day reminder only (a date has no time); changing a date makes the new date get its own reminder; if sending fails it is retried on the next run.
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).

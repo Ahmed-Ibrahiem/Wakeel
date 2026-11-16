@@ -175,7 +175,7 @@ Indexes: `hearings_user_hearing_at_idx` on `(user_id, hearing_at)` for the dashb
 - **Postponing** a hearing means: mark the old one `postponed` and create a new `scheduled` one. Recording the outcome and the next date happens in a single step in the UI, and in a single `db.batch` on the server (it also touches `cases.updated_at`). With no next date, the old hearing becomes `completed`.
 - **Only a `scheduled` hearing can be edited.** A hearing that already has a decision can only be deleted.
 - **Order rule** (application code): a `scheduled` hearing must be later than the latest `postponed` or `completed` hearing of the same case. It is checked on create, on update and when recording the next hearing, so the timeline cannot go backwards. Consequence: old history must be entered oldest first.
-- When `hearing_at` changes, both `reminder_*_sent_at` columns are reset to null, otherwise a reminder already sent for the old date would block the new one. (Nothing sends reminders yet, the columns stay empty until the reminders feature.)
+- When `hearing_at` changes, both `reminder_*_sent_at` columns are reset to null, otherwise a reminder already sent for the old date would block the new one. The reminder job fills them (see `PROJECT_CONTEXT.md`, Reminders behaviour).
 - **Conflict check** (application code, not a database constraint): other `scheduled` hearings of the same lawyer within 90 minutes before or after the new `hearing_at` (`CONFLICT_WINDOW_MINUTES`). It is a confirmation, not a block, because two hearings can legitimately be close. Location-based checks ("same day but far apart") come later.
 - **Time zone:** the form sends a date and a time as strings; the server turns them into one UTC instant using the lawyer's zone name from `user_settings` (`lib/zoned-time.ts`, DST-safe). A time skipped by a clock change is rejected.
 
@@ -207,7 +207,7 @@ The composite FK to `cases` has **no cascade**, same as hearings. Verified: a ca
 **Notes**
 
 - Only a `pending` deadline can be edited. Marking it done sets `completed_at`; reopening clears it. Both only change the opposite state, so a double click does nothing.
-- When `due_date` changes, `reminder_sent_at` is reset to null (nothing sends reminders yet).
+- When `due_date` changes, `reminder_sent_at` is reset to null so the new date gets its own reminder.
 - Every change touches `cases.updated_at` in the same `db.batch`.
 - `due_date` is a `date` read as a string, so no time zone can shift it.
 
@@ -258,6 +258,8 @@ Files stay in private storage and are opened through short-lived signed links, g
 - **`user_id` on every app table, on purpose.** The first draft relied on reaching the owner through the parent tables. Repeating `user_id` makes every query simple and safe, and the composite foreign keys guarantee the copy can never disagree with the parent.
 - **`hearing_at` is one `timestamptz` column** (not separate date and time columns), indexed together with `user_id`, because conflict checks, reminders and the calendar all query by time.
 - **Reminder flags are timestamps, not booleans.** They exist only to stop the reminder job from sending twice, and a timestamp can be reset when the date changes.
+- **The flag is also the lock.** The job claims a reminder with one `UPDATE ... WHERE <flag> IS NULL RETURNING id`, so only one run can send it, and sets the flag back to null if the email fails. No extra table or column was needed.
+- **Reminder times are computed, not stored:** whether something is due is derived from `hearing_at` / `due_date`, `user_settings` and the current time in the lawyer's zone.
 - **`updated_at` on every table** is what lets the dashboard show recently updated cases.
 - **Enums instead of free text** for case type, case status, hearing type, hearing status and deadline status, so typos can never reach the database.
 - **No duplicated data:** a client's name is never copied into `cases`, it is always read through the relationship.
@@ -278,6 +280,7 @@ Files stay in private storage and are opened through short-lived signed links, g
 - Hard delete of a client with cases (or a case with hearings/deadlines) is blocked, archiving was added.
 - Hearings built as designed, plus the order rule, "edit only while scheduled" and a 90-minute conflict window.
 - Deadlines built as designed, plus "edit only while pending" and reopening.
+- Reminders built on the existing columns: no schema change.
 
 ## Open questions
 

@@ -27,14 +27,14 @@ export async function ScheduleSection() {
   const moreUndecided = stats.undecidedHearings - undecided.items.length;
 
   return (
-    <section className="space-y-4 rounded-sm border bg-background p-4">
+    <section className="space-y-3 rounded-sm border bg-background p-4">
       <h2 className="flex items-center gap-2 text-lg font-bold">
         <CalendarDays className="size-5 text-primary" aria-hidden />
         جلسات اليوم وغداً
       </h2>
 
       {undecided.items.length > 0 && (
-        <div className="space-y-2 rounded-sm border border-amber-200 bg-amber-50 p-3">
+        <div className="space-y-2 rounded-sm border border-amber-200 bg-amber-50 p-2.5">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-amber-800">
             <AlertTriangle className="size-4" aria-hidden />
             جلسات تحتاج تسجيل قرار ({stats.undecidedHearings})
@@ -99,7 +99,7 @@ export async function ScheduleSection() {
                     href={`/dashboard/cases/${h.caseId}`}
                     className={cn(
                       ROW_GRID,
-                      "rounded-sm border p-3 hover:border-primary/40 lg:grid lg:grid-cols-6",
+                      "rounded-sm border p-2.5 hover:border-primary/40 lg:grid lg:grid-cols-6",
                     )}
                   >
                     <div className="flex items-center gap-3">
