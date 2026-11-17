@@ -14,7 +14,11 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClientRowActions } from "@/features/clients/components/ClientRowActions";
 
-type ClientRow = Client & { casesCount: number };
+type ClientRow = Client & {
+  casesCount: number;
+  latestCaseNumber: string | null;
+  isActive: boolean;
+};
 
 export function ClientsTable({
   clients,
@@ -31,6 +35,8 @@ export function ClientsTable({
             <TableHead>الاسم</TableHead>
             <TableHead>رقم الهاتف</TableHead>
             <TableHead>القضايا</TableHead>
+            <TableHead className="hidden lg:table-cell">آخر قضية</TableHead>
+            <TableHead>الحالة</TableHead>
             <TableHead className="hidden md:table-cell">
               تاريخ أول تعامل
             </TableHead>
@@ -43,7 +49,12 @@ export function ClientsTable({
               <TableCell>
                 <div className="flex items-center gap-3">
                   <InitialsAvatar name={c.fullName} />
-                  <span className="font-medium">{c.fullName}</span>
+                  <Link
+                    href={`/dashboard/clients/${c.id}`}
+                    className="font-medium hover:text-primary hover:underline"
+                  >
+                    {c.fullName}
+                  </Link>
                 </div>
               </TableCell>
               <TableCell dir="ltr" className="text-right tabular-nums">
@@ -51,6 +62,27 @@ export function ClientsTable({
               </TableCell>
               <TableCell className="tabular-nums">
                 {c.casesCount > 0 ? c.casesCount : "—"}
+              </TableCell>
+              <TableCell
+                dir="ltr"
+                className="hidden text-right tabular-nums lg:table-cell"
+              >
+                {c.latestCaseNumber ?? "—"}
+              </TableCell>
+              <TableCell>
+                {archived ? (
+                  "—"
+                ) : (
+                  <span
+                    className={
+                      c.isActive
+                        ? "rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-primary"
+                        : "rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500"
+                    }
+                  >
+                    {c.isActive ? "نشط" : "غير نشط"}
+                  </span>
+                )}
               </TableCell>
               <TableCell
                 dir="ltr"

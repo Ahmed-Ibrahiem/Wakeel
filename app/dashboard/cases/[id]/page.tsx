@@ -12,23 +12,9 @@ import {
 import { Suspense } from "react";
 import { HearingsSection } from "@/features/hearings/components/HearingsSection";
 import { DeadlinesSection } from "@/features/deadlines/components/DeadlinesSection";
+import { DetailItem as Item } from "@/components/shared/DetailItem";
 
 type Params = Promise<{ id: string }>;
-
-function Item({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <div className="mt-1 text-sm font-medium wrap-break-word">{children}</div>
-    </div>
-  );
-}
 
 export default async function CaseDetailsPage({ params }: { params: Params }) {
   const { id } = await params;
@@ -77,7 +63,14 @@ export default async function CaseDetailsPage({ params }: { params: Params }) {
       </header>
 
       <section className="grid gap-6 rounded-sm border bg-background p-6 sm:grid-cols-2">
-        <Item label="الموكل">{item.clientName}</Item>
+        <Item label="الموكل">
+          <Link
+            href={`/dashboard/clients/${item.clientId}`}
+            className="hover:text-primary hover:underline"
+          >
+            {item.clientName}
+          </Link>
+        </Item>
         <Item label="نوع القضية">
           {CASE_TYPE_LABELS[item.caseType] ?? item.caseType}
         </Item>

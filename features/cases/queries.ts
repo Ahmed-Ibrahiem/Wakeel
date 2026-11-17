@@ -17,6 +17,7 @@ import {
 import { cases, clients, deadlines, hearings } from "@/db/schema";
 import { db } from "@/db";
 import { escapeLike, first, type RawParams } from "@/lib/query-utils";
+import * as z from "zod";
 
 // A case is always joined to its client through BOTH id and user_id
 const clientJoin = and(
@@ -162,4 +163,25 @@ export async function listClientOptions(includeId?: string) {
     .where(and(eq(clients.userId, user.id), visible))
     .orderBy(asc(clients.fullName))
     .limit(500);
+}
+
+// All cases of one client, archived ones last. Capped at 100: a single client
+// with more cases than that is far outside normal use.
+export async function listClientCases(clientId: string) {
+  const { user } = await requireSession();
+
+  // A malformed uuid would make Postgres throw, so we reject it before the query
+  if (!z.uuid().safeParse(clientId).success) return [];
+
+  return db
+    .select({ ...caseColumns, nextHearingAt, lastHearingAt, nextDeadlineDate })
+    .from(cases)
+    .innerJoin(clients, clientJoin)
+    .where(and(eq(cases.userId, user.id), eq(cases.clientId, clientId)))
+    .orderBy(
+      sql`${cases.archivedAt} is not null`, // false first: active cases on top
+      desc(cases.updatedAt),
+      asc(cases.id),
+    )
+    .limit(100);
 }

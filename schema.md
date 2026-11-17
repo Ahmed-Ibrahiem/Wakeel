@@ -112,7 +112,7 @@ The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only
 
 Constraints and indexes: `unique(id, user_id)` (needed by the composite foreign keys in child tables), index `(user_id, full_name)`, index `(user_id, archived_at)`.
 
-**Calculated, not stored:** number of cases (a subquery in the list query, counting archived cases too), latest case, and client status (**active** when they have at least one open case, **inactive** otherwise). The case count is built; latest case and active/inactive are not yet.
+**Calculated, not stored:** number of cases (a subquery in the list query, counting archived cases too), latest case, and client status (**active** when they have at least one open case, **inactive** otherwise). All three are built as subqueries in the clients list query (the latest case is the most recently updated one; active means at least one case that is not `closed` and not archived), always joined on `client_id` and `user_id`.
 
 **Deleting:** only possible when the client has no cases (the database enforces it with a foreign key error, code `23503`, translated to a friendly message). Otherwise the client is archived.
 
@@ -281,6 +281,7 @@ Files stay in private storage and are opened through short-lived signed links, g
 - Hearings built as designed, plus the order rule, "edit only while scheduled" and a 90-minute conflict window.
 - Deadlines built as designed, plus "edit only while pending" and reopening.
 - Reminders built on the existing columns: no schema change.
+- Client details page, "latest case" and active/inactive built as calculated values: no schema change.
 
 ## Open questions
 
