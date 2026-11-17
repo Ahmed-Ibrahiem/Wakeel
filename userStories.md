@@ -35,8 +35,8 @@ Check each story off once it's fully built and working.
 - [x] **As a** lawyer, **I want to** store basic contact info for each client (phone, email, address), **so that** I can reach them when needed. `v1`
 - [x] **As a** lawyer, **I want to** see the date I first started working with a client, **so that** I have a history of our relationship. `v1`
 - [x] **As a** lawyer, **I want to** see how many cases each client has in the list, **so that** I get the picture without opening each client. `v1`
-- [ ] **As a** lawyer, **I want to** see each client's latest case in the list, **so that** I know what I last handled for them. `v1`
-- [ ] **As a** lawyer, **I want to** open a client and see all their cases in one place, **so that** I see everything I'm handling for them. `v1`
+- [x] **As a** lawyer, **I want to** see each client's latest case in the list, **so that** I know what I last handled for them. `v1` (the most recently updated case; the list also shows active / inactive)
+- [x] **As a** lawyer, **I want to** open a client and see all their cases in one place, **so that** I see everything I'm handling for them. `v1` (the client page lists their cases as the usual case cards, archived ones last)
 - [x] **As a** lawyer, **I want to** edit a client's details, **so that** the information stays correct. `v1`
 - [x] **As a** lawyer, **I want to** archive a client (and delete one only if they have no cases), **so that** I never lose case history by accident. `v1`
 
@@ -120,7 +120,7 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 
 **v1 (feedback version)**
 - [x] Authentication, landing page
-- [x] Clients (the "latest case", active/inactive and client details page parts wait for hearings and a client page)
+- [x] Clients (list, search, details page with all their cases, latest case, active / inactive)
 - [x] Cases (list, form, details, delete, duplicate warning)
 - [x] Case card signals (next hearing, nearest deadline, urgent badge, "no upcoming hearing" warning)
 - [x] Hearings (create, edit, delete, decision + next hearing in one step, conflict warning)
@@ -155,9 +155,10 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 14. **Hearings:** a decision plus the next date is one step (old hearing becomes `postponed`, a new `scheduled` one is created; with no next date the old one becomes `completed`). Only `scheduled` hearings are editable, and a scheduled hearing must come after the last decided one.
 15. **Close hearings** (within 90 minutes) trigger a confirmation, not a block.
 16. **Deadlines** are a calendar date with a title. Marking one done or reopening it needs no confirmation; only pending deadlines are editable; "overdue" is calculated from the lawyer's today.
-17. **Overdue things count as urgent:** a hearing in the past with no decision, and a pending deadline whose date has passed, keep the case marked urgent until they are handled.
-18. **Dashboard:** the four cards are ongoing cases, today's hearings, hearings in the next 7 days (not a calendar week, to avoid the question of which day a week starts) and pending deadlines (with the overdue ones counted apart). The billing card and widget wait for v1.1. Archived cases never count. Past hearings that are still "scheduled" get their own box, otherwise nobody would see them.
 19. **Settings:** the time zone is chosen from a fixed list (an invalid name would break every date on screen), and the reminder timing from fixed options, with "none" available for both. Changing the zone never moves a saved hearing.
 20. **Reminders:** an email goes out once per reminder, never for something already past; day-based reminders arrive from 08:00 in the lawyer's own time zone, hour-based ones inside the chosen window; deadlines have a day reminder only (a date has no time); changing a date makes the new date get its own reminder; if sending fails it is retried on the next run.
+21. **Clients:** a client is active when they have at least one case that is not closed and not archived; the latest case is the most recently updated one; an archived client's page still opens and lists their cases; opening a client (or case) that does not exist or belongs to someone else shows the same "not found" page.
+18. **Dashboard:** the four cards are ongoing cases, today's hearings, hearings in the next 7 days (not a calendar week, to avoid the question of which day a week starts) and pending deadlines (with the overdue ones counted apart). The billing card and widget wait for v1.1. Archived cases never count. Past hearings that are still "scheduled" get their own box, otherwise nobody would see them.
+17. **Overdue things count as urgent:** a hearing in the past with no decision, and a pending deadline whose date has passed, keep the case marked urgent until they are handled.
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).

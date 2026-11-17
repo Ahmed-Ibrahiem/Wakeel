@@ -19,7 +19,6 @@ import { db } from "@/db";
 import * as z from "zod";
 import { escapeLike, first, type RawParams } from "@/lib/query-utils";
 
-
 export const clientsList = async (raw: RawParams) => {
   const { user } = await requireSession();
 
@@ -58,9 +57,32 @@ export const clientsList = async (raw: RawParams) => {
     and ${cases.userId} = ${clients.userId})
   `.as("cases_count");
 
+  // Most recently updated case of the client (calculated, never stored)
+  const latestCaseNumber = sql<string | null>`
+  (select ${cases.caseNumber} from ${cases}
+  where ${cases.clientId} = ${clients.id}
+  and ${cases.userId} = ${clients.userId}
+  order by ${cases.updatedAt} desc, ${cases.id} asc
+  limit 1)
+`.as("latest_case_number");
+
+  // Active = at least one case that is not closed and not archived
+  const isActive = sql<boolean>`
+  exists (select 1 from ${cases}
+  where ${cases.clientId} = ${clients.id}
+  and ${cases.userId} = ${clients.userId}
+  and ${cases.archivedAt} is null
+  and ${cases.status} <> 'closed')
+`.as("is_active");
+
   // Cases per client, calculated inside the same query (never stored)
   const items = await db
-    .select({ ...getTableColumns(clients), casesCount })
+    .select({
+      ...getTableColumns(clients),
+      casesCount,
+      latestCaseNumber,
+      isActive,
+    })
     .from(clients)
     .where(where)
     .orderBy(asc(clients.fullName), asc(clients.id))
