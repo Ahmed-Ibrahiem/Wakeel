@@ -137,6 +137,7 @@ export function CaseForm({ clients, caseId, initialValues }: Props) {
               nameInSchema="clientId"
               placeholder="اختر الموكل"
               options={clients.map((c) => ({ id: c.id, label: c.fullName }))}
+              className="py-5!"
             />
             <ClientPreview client={selectedClient} />
           </div>
@@ -158,6 +159,7 @@ export function CaseForm({ clients, caseId, initialValues }: Props) {
                 id,
                 label,
               }))}
+              className="py-5!"
             />
             <InputWithLabel<CaseFormValues>
               fieldName="اسم المحكمة"
@@ -173,7 +175,11 @@ export function CaseForm({ clients, caseId, initialValues }: Props) {
         </FormSection>
 
         <div className="grid gap-5 lg:grid-cols-2">
-          <FormSection title="الحالة والتواريخ" icon={CalendarDays} className="p-6!">
+          <FormSection
+            title="الحالة والتواريخ"
+            icon={CalendarDays}
+            className="p-6!"
+          >
             <div className="grid gap-5 sm:grid-cols-2">
               <SelectWithLabel
                 fieldName="حالة القضية"
@@ -182,6 +188,7 @@ export function CaseForm({ clients, caseId, initialValues }: Props) {
                 options={Object.entries(CASE_STATUS_LABELS).map(
                   ([id, label]) => ({ id, label }),
                 )}
+                className="py-5!"
               />
               <InputWithLabel<CaseFormValues>
                 fieldName="تاريخ الحكم (اختياري)"
@@ -191,7 +198,11 @@ export function CaseForm({ clients, caseId, initialValues }: Props) {
             </div>
           </FormSection>
 
-          <FormSection title="ملاحظات إضافية" icon={StickyNote} className="p-6!">
+          <FormSection
+            title="ملاحظات إضافية"
+            icon={StickyNote}
+            className="p-6!"
+          >
             <Field
               label="ملاحظات (اختياري)"
               htmlFor="notes"
