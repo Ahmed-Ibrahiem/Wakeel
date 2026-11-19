@@ -467,6 +467,10 @@
   html {
     @apply font-sans scroll-smooth;
   }
+
+  html {
+    font-size: 90% ;
+  }
 }
 
 /* ============================================

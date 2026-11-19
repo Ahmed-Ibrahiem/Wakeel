@@ -5,15 +5,15 @@ import { Pulse } from "@/components/shared/Pulse";
 export function CaseFormSkeleton() {
   return (
     <div className="space-y-5">
-      <Pulse className="h-32" /> {/* client + preview */}
-      <Pulse className="h-32" /> {/* case details */}
+      <Pulse className="h-30" /> {/* client + preview */}
+      <Pulse className="h-30" /> {/* case details */}
       <div className="grid gap-5 lg:grid-cols-2">
-        <Pulse className="h-40" /> {/* status + dates */}
-        <Pulse className="h-40" /> {/* notes */}
+        <Pulse className="h-36" /> {/* status + dates */}
+        <Pulse className="h-36" /> {/* notes */}
       </div>
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Pulse className="h-9 w-32" /> {/* submit */}
-        <Pulse className="h-9 w-24" /> {/* cancel */}
+        <Pulse className="h-9 w-30" /> {/* submit */}
+        <Pulse className="h-9 w-20" /> {/* cancel */}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export default function CaseDetailsLoading() {
       />
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">تفاصيل القضية</h1>
-        <Pulse className="h-9 w-24" /> {/* edit button */}
+        <Pulse className="h-9 w-20" /> {/* edit button */}
       </header>
       <Pulse className="h-24" /> {/* summary strip */}
       <Pulse className="h-14" /> {/* tabs */}
