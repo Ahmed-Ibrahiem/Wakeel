@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFormContext, Controller } from "react-hook-form";
+import type { LucideIcon } from "lucide-react";
 
 // Type definition for a single option inside the dropdown list
 type Option = {
@@ -22,6 +23,7 @@ type Props<S> = {
   placeholder?: string; // Placeholder text
   className?: string;
   disabled?: boolean;
+  icon?: LucideIcon; // Optional icon shown inside the trigger, before the value
 };
 
 export function SelectWithLabel<S>({
@@ -31,6 +33,7 @@ export function SelectWithLabel<S>({
   placeholder = "اختر...",
   className,
   disabled,
+  icon: Icon,
 }: Props<S>) {
   const form = useFormContext();
 
@@ -52,10 +55,13 @@ export function SelectWithLabel<S>({
           >
             <SelectTrigger
               id={nameInSchema}
-              className={`w-full ${className}`}
+              className={`w-full ${className ?? ""}`}
               aria-invalid={fieldState.invalid}
             >
-              <SelectValue placeholder={placeholder} />
+              <span className="flex-start gap-2">
+                {Icon && <Icon className="size-4 text-muted-foreground" />}
+                <SelectValue placeholder={placeholder} />
+              </span>
             </SelectTrigger>
             <SelectContent>
               {options.map((item) => (

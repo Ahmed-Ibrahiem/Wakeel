@@ -2,12 +2,13 @@ import { ClientsSearch } from "@/features/clients/components/ClientsSearch";
 import { ClientsTable } from "@/features/clients/components/ClientsTables";
 import { clientsList } from "@/features/clients/queries";
 import { Pagination } from "@/components/shared/Pagination";
-import { DEFAULT_PAGE_SIZE } from "@/features/clients/schemas";
 import Link from "next/link";
 import { SearchX, Users, Plus, Archive } from "lucide-react";
 import { buttonVariants, Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ClientsTabs } from "@/features/clients/components/ClientsTabs";
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "@/lib/pagination";
+import { PageSizeSelect } from "@/components/shared/PageSizeSelect";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -75,7 +76,7 @@ const ClientsPage = async ({
   }
 
   return (
-    <div className="space-y-2.5">
+    <div className="animate-fade-in space-y-2.5">
       <header className="flex-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">العملاء</h1>
@@ -104,13 +105,22 @@ const ClientsPage = async ({
         emptyState()
       ) : (
         <>
-          <div className="rounded-sm border bg-background overflow-hidden p-2.5 ">
+          <div className="rounded-sm border bg-background overflow-hidden p-2.5">
             <ClientsTable archived={archived} clients={items} />
 
-            <div className="flex-col-center gap-3 sm:flex-row sm:justify-between">
-              <p className="text-sm text-muted-foreground">
-                عرض {from} - {to} من {total} عميل
-              </p>
+            <div className="flex-col-center gap-3 sm:flex-row sm:justify-between mt-5">
+              <div className="flex-start flex-wrap gap-4">
+                <p className="text-sm text-muted-foreground">
+                  عرض {from} - {to} من {total} عميل
+                </p>
+                {total > PAGE_SIZES[0] && (
+                  <PageSizeSelect
+                    value={pageSize}
+                    sizes={PAGE_SIZES}
+                    defaultSize={DEFAULT_PAGE_SIZE}
+                  />
+                )}
+              </div>
               <Pagination
                 page={page}
                 totalPages={totalPages}

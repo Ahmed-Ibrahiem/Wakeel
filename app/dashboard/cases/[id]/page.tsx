@@ -1,60 +1,66 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { getCase } from "@/features/cases/queries";
-import {
-  CASE_STATUS_LABELS,
-  CASE_STATUS_STYLES,
-  CASE_TYPE_LABELS,
-} from "@/features/cases/labels";
 import { Suspense } from "react";
+import { Pencil } from "lucide-react";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import { Button } from "@/components/ui/button";
+import { first } from "@/lib/query-utils";
+import { requireSession } from "@/lib/session";
+import { getUserSettings } from "@/lib/userSettings";
+import { getCase } from "@/features/cases/queries";
+import { caseTabSchema } from "@/features/cases/tabs";
+import { CaseOverview } from "@/features/cases/components/CaseOverview";
+import { CaseSummaryStrip } from "@/features/cases/components/CaseSummaryStrip";
+import { CaseTabs } from "@/features/cases/components/CaseTabs";
 import { HearingsSection } from "@/features/hearings/components/HearingsSection";
 import { DeadlinesSection } from "@/features/deadlines/components/DeadlinesSection";
-import { DetailItem as Item } from "@/components/shared/DetailItem";
+import { CaseOverviewSkeleton } from "@/features/cases/components/CaseOverviewSkeleton";
 
 type Params = Promise<{ id: string }>;
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-export default async function CaseDetailsPage({ params }: { params: Params }) {
+const sectionFallback = (
+  <div className="h-32 animate-pulse rounded-sm border bg-muted/40" />
+);
+
+export default async function CaseDetailsPage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const { id } = await params;
 
   const item = await getCase(id);
   if (!item) notFound();
 
-  return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <Link
-        href="/dashboard/cases"
-        className="inline-flex flex-start gap-1 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowRight className="size-4" />
-        كل القضايا
-      </Link>
+  const tab = caseTabSchema.parse(first((await searchParams).tab));
 
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold" dir="ltr">
-            {item.caseNumber}
-          </h1>
-          <div className="flex-start flex-wrap  gap-2">
-            <span
-              className={cn(
-                "rounded-full px-3 py-1 text-xs font-medium",
-                CASE_STATUS_STYLES[item.status],
-              )}
-            >
-              {CASE_STATUS_LABELS[item.status] ?? item.status}
+  const { user } = await requireSession();
+  const { timeZone } = await getUserSettings(user.id);
+
+  return (
+    <div className="mx-auto max-w-8xl space-y-3">
+      <Breadcrumb
+        items={[
+          { label: "الرئيسية", href: "/dashboard" },
+          { label: "القضايا", href: "/dashboard/cases" },
+          { label: "تفاصيل القضية" },
+        ]}
+      />
+
+      <header className="flex flex-wrap items-center justify-between gap-3 animate-fade-in">
+        <div className="flex-start flex-wrap gap-3">
+          <h1 className="text-2xl font-bold">تفاصيل القضية</h1>
+          {item.archivedAt && (
+            <span className="rounded-full bg-stone-200 px-3 py-1 text-xs font-medium text-stone-700">
+              مؤرشفة
             </span>
-            {item.archivedAt && (
-              <span className="rounded-full bg-stone-200 px-3 py-1 text-xs font-medium text-stone-700">
-                مؤرشفة
-              </span>
-            )}
-          </div>
+          )}
         </div>
 
-        <Button asChild className="rounded-sm!">
+        <Button asChild className="rounded-sm! text-[16px] h-9">
           <Link href={`/dashboard/cases/${item.id}/edit`}>
             <Pencil className="size-4" />
             تعديل
@@ -62,48 +68,48 @@ export default async function CaseDetailsPage({ params }: { params: Params }) {
         </Button>
       </header>
 
-      <section className="grid gap-6 rounded-sm border bg-background p-6 sm:grid-cols-2">
-        <Item label="الموكل">
-          <Link
-            href={`/dashboard/clients/${item.clientId}`}
-            className="hover:text-primary hover:underline"
-          >
-            {item.clientName}
-          </Link>
-        </Item>
-        <Item label="نوع القضية">
-          {CASE_TYPE_LABELS[item.caseType] ?? item.caseType}
-        </Item>
-        <Item label="المحكمة">{item.courtName}</Item>
-        <Item label="الخصم">{item.opposingParty ?? "—"}</Item>
-        <Item label="تاريخ الحكم">
-          {item.judgmentDate ? <span dir="ltr">{item.judgmentDate}</span> : "—"}
-        </Item>
-        {item.notes && (
-          <div className="sm:col-span-2">
-            <Item label="ملاحظات">
-              {/* React escapes text; whitespace-pre-wrap keeps the line breaks */}
-              <p className="whitespace-pre-wrap">{item.notes}</p>
-            </Item>
-          </div>
-        )}
-      </section>
+      <CaseSummaryStrip
+        caseNumber={item.caseNumber}
+        caseType={item.caseType}
+        courtName={item.courtName}
+        opposingParty={item.opposingParty}
+        createdAt={item.createdAt}
+        timeZone={timeZone}
+      />
 
-      <Suspense
-        fallback={
-          <div className="h-32 animate-pulse rounded-sm border bg-muted/40" />
-        }
-      >
-        <HearingsSection caseId={item.id} />
-      </Suspense>
+      <CaseTabs caseId={item.id} active={tab} />
 
-      <Suspense
-        fallback={
-          <div className="h-32 animate-pulse rounded-xl border bg-muted/40" />
-        }
-      >
-        <DeadlinesSection caseId={item.id} />
-      </Suspense>
+      {tab === "overview" && (
+        <Suspense fallback={<CaseOverviewSkeleton />}>
+          <CaseOverview item={item} timeZone={timeZone} />
+        </Suspense>
+      )}
+
+      {tab === "hearings" && (
+        <Suspense fallback={sectionFallback}>
+          <HearingsSection caseId={item.id} />
+        </Suspense>
+      )}
+
+      {tab === "deadlines" && (
+        <Suspense fallback={sectionFallback}>
+          <DeadlinesSection caseId={item.id} />
+        </Suspense>
+      )}
+
+      {tab === "notes" && (
+        <section className="rounded-sm border bg-background p-6">
+          <h2 className="mb-3 text-lg font-bold">الملاحظات</h2>
+          {item.notes ? (
+            // React escapes text; whitespace-pre-wrap keeps the line breaks
+            <p className="whitespace-pre-wrap text-sm">{item.notes}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              لا توجد ملاحظات لهذه القضية.
+            </p>
+          )}
+        </section>
+      )}
     </div>
   );
 }

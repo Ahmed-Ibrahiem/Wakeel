@@ -58,7 +58,7 @@ export function PhoneInput<S>({
             aria-label="كود الدولة"
             aria-invalid={!!dialState.error}
             onBlur={dial.onBlur}
-            className="w-24 shrink-0 h-full! rounded-sm!"
+            className="w-24 shrink-0 h-full! rounded-sm! py-2!"
           >
             <SelectValue>{dial.value}</SelectValue>
           </SelectTrigger>

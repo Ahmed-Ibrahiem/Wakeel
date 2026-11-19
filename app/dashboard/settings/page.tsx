@@ -1,7 +1,13 @@
+import { Settings } from "lucide-react";
 import { requireSession } from "@/lib/session";
 import { getUserSettings } from "@/lib/userSettings";
+import { formatLongDate, formatTime } from "@/lib/format-date";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import { PageHeader } from "@/components/shared/PageHeader";
 import { SettingsForm } from "@/features/settings/components/SettingsForm";
+import { getTimeZoneOffsets } from "@/features/settings/timezone-offsets";
 import {
+  DEFAULT_SETTINGS,
   REMINDER_DAYS,
   REMINDER_HOURS,
   TIME_ZONES,
@@ -24,25 +30,45 @@ const SettingsPage = async () => {
   const settings = await getUserSettings(user.id);
 
   const initialValues: SettingsFormValues = {
-    timeZone: pick(TIME_ZONES, settings.timeZone, "Africa/Cairo"),
-    reminderDays: pick(REMINDER_DAYS, String(settings.reminderDaysBefore), "1"),
+    timeZone: pick(TIME_ZONES, settings.timeZone, DEFAULT_SETTINGS.timeZone),
+    reminderDays: pick(
+      REMINDER_DAYS,
+      String(settings.reminderDaysBefore),
+      DEFAULT_SETTINGS.reminderDays,
+    ),
     reminderHours: pick(
       REMINDER_HOURS,
       String(settings.reminderHoursBefore),
-      "3",
+      DEFAULT_SETTINGS.reminderHours,
     ),
   };
 
-  return (
-    <div className="mx-auto max-w-2xl space-y-4">
-      <header>
-        <h1 className="text-2xl font-bold">الإعدادات</h1>
-        <p className="text-sm text-muted-foreground">
-          اضبط المنطقة الزمنية ومواعيد التذكير بما يناسبك
-        </p>
-      </header>
+  // Shown in the lawyer's own saved time zone
+  const updatedAt = new Date(settings.updatedAt);
+  const lastUpdated = `${formatLongDate(updatedAt, initialValues.timeZone)}، ${formatTime(updatedAt, initialValues.timeZone)}`;
 
-      <SettingsForm initialValues={initialValues} />
+  return (
+    <div className="animate-fade-in mx-auto max-w-8xl space-y-5">
+      <Breadcrumb
+        items={[
+          { label: "الرئيسية", href: "/dashboard" },
+          { label: "الإعدادات" },
+        ]}
+      />
+      <PageHeader
+        icon={Settings}
+        title="الإعدادات"
+        description="خصص مواعيد التذكير والمنطقة الزمنية بما يناسبك"
+      />
+
+      <SettingsForm
+        initialValues={initialValues}
+        timeZoneOffsets={getTimeZoneOffsets()}
+      />
+
+      <p className="text-xs text-muted-foreground">
+        آخر تحديث للإعدادات: {lastUpdated}
+      </p>
     </div>
   );
 };

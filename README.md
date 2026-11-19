@@ -13,14 +13,14 @@ Lawyers often manage clients, case files, and — most critically — court hear
 **Built (v1)**
 
 - **Authentication** — email and password with verification and password reset, Google sign-in, sessions stored in the database
-- **Client management** — contact info, search by name or phone, archive and restore, a client page that lists all of the client's cases, plus the latest case and an active / inactive status in the list
-- **Case management** — case number, type, court, opposing party, status, search and filters, archive and restore, duplicate-number warning
+- **Client management** — contact info, search by name or phone, archive and restore, a client page with summary numbers and a filterable table of the client's cases, plus the latest case and an active / inactive status in the list, and a choice of how many rows to show per page
+- **Case management** — case number, type, court, opposing party, status, search and filters, archive and restore, duplicate-number warning, and a details page with tabs (overview, hearings, deadlines, notes)
 - **Hearings** — scheduled, postponed or completed; recording a decision and the next hearing in one step; a warning when two hearings are close to each other
 - **Deadlines** — non-hearing dates (such as the last day to appeal) with overdue, upcoming and done groups
 - **Case card signals** — urgent badge, next hearing and nearest deadline directly on the card
 - **Dashboard** — today's and tomorrow's hearings, hearings that still have no decision, upcoming deadlines, caseload numbers and recently updated cases
 - **Email reminders** — a reminder some days and/or some hours before a hearing, and some days before a deadline, sent in Modern Standard Arabic and timed in the lawyer's own time zone
-- **Settings** — time zone and reminder timing, saved per lawyer
+- **Settings** — time zone and reminder timing, saved per lawyer, with a one-click return to the defaults
 
 **Planned**
 

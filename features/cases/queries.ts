@@ -140,6 +140,7 @@ export async function getCase(id: string) {
       ...caseColumns,
       opposingParty: cases.opposingParty,
       notes: cases.notes,
+      createdAt: cases.createdAt,
     })
     .from(cases)
     .innerJoin(clients, clientJoin)
@@ -158,7 +159,12 @@ export async function listClientOptions(includeId?: string) {
     : isNull(clients.archivedAt);
 
   return db
-    .select({ id: clients.id, fullName: clients.fullName })
+    .select({
+      id: clients.id,
+      fullName: clients.fullName,
+      phone: clients.phone,
+      email: clients.email,
+    })
     .from(clients)
     .where(and(eq(clients.userId, user.id), visible))
     .orderBy(asc(clients.fullName))

@@ -21,3 +21,4 @@ export function daysBetween(from: string, to: string) {
   const ms = Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`);
   return Math.round(ms / 86_400_000);
 }
+

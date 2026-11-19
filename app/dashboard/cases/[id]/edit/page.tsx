@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { CaseForm } from "@/features/cases/components/CaseForm";
 import { getCase, listClientOptions } from "@/features/cases/queries";
+import { Breadcrumb } from "@/components/shared/Breadcrumb";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { Briefcase } from "lucide-react";
 
 type Params = Promise<{ id: string }>;
 
@@ -14,13 +17,22 @@ export default async function EditCasePage({ params }: { params: Params }) {
   const clients = await listClientOptions(item.clientId);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold">تعديل بيانات القضية</h1>
-        <p className="text-text-body text-lg mt-1.5" >
-          {item.caseNumber}
-        </p>
-      </header>
+    <div className="mx-auto max-w-8xl space-y-6">
+
+      <div className="space-y-3">
+        <Breadcrumb
+          items={[
+            { label: "الرئيسية", href: "/dashboard" },
+            { label: "القضايا", href: "/dashboard/cases" },
+            { label: "تعديل القضية" },
+          ]}
+        />
+        <PageHeader
+          icon={Briefcase}
+          title="تعديل بيانات القضية"
+          description={item.caseNumber}
+        />
+      </div>
 
       <CaseForm
         clients={clients}

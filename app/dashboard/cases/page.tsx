@@ -10,6 +10,8 @@ import { CASES_BASE, casesHref } from "@/features/cases/url";
 import { CasesSearch } from "@/features/cases/components/CasesSearch";
 import { CasesFilters } from "@/features/cases/components/CasesFilters";
 import { CaseCard } from "@/features/cases/components/CaseCard";
+import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "@/lib/pagination";
+import { PageSizeSelect } from "@/components/shared/PageSizeSelect";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -69,7 +71,7 @@ const CasesPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="animate-fade-in space-y-2">
       <header>
         <div>
           <h1 className="text-2xl font-bold">القضايا</h1>
@@ -107,14 +109,19 @@ const CasesPage = async ({ searchParams }: { searchParams: SearchParams }) => {
           </div>
 
           <div className="flex-col-center gap-3 sm:flex-row sm:justify-between rounded-sm border bg-background p-2.5">
-            <p className="text-sm text-muted-foreground">
-              عرض {from} - {to} من {total} قضية
-            </p>
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              hrefFor={hrefFor}
-            />
+            <div className="flex-start flex-wrap gap-4">
+              <p className="text-sm text-muted-foreground">
+                عرض {from} - {to} من {total} قضية
+              </p>
+              {total > PAGE_SIZES[0] && (
+                <PageSizeSelect
+                  value={pageSize}
+                  sizes={PAGE_SIZES}
+                  defaultSize={DEFAULT_PAGE_SIZE}
+                />
+              )}
+            </div>
+            <Pagination page={page} totalPages={totalPages} hrefFor={hrefFor} />
           </div>
         </>
       )}

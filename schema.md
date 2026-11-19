@@ -82,6 +82,8 @@ Created by a `user.create` hook. `getUserSettings()` creates the row with defaul
 
 The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only make sense in the lawyer's own time.
 
+`updated_at` is also shown on the settings page as "last updated" (in the lawyer's own zone). The column defaults (Africa/Cairo, 1 day, 3 hours) must match `DEFAULT_SETTINGS` in `features/settings/schemas.ts`, which the "reset" button uses.
+
 **Allowed values (enforced in the application, not by a database constraint):** the time zone must be one of the names in `TIME_ZONES` (`features/settings/schemas.ts`, Arab countries plus London, Paris, New York and UTC), because an invalid name makes `Intl` throw a `RangeError` on every page that formats a date. `reminder_days_before` is one of 0, 1, 2, 3, 7 and `reminder_hours_before` one of 0, 1, 2, 3, 6, 12, 24 (0 means no reminder of that kind). `getUserSettings()` throws if the row can neither be read nor created.
 
 ---
@@ -112,7 +114,7 @@ The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only
 
 Constraints and indexes: `unique(id, user_id)` (needed by the composite foreign keys in child tables), index `(user_id, full_name)`, index `(user_id, archived_at)`.
 
-**Calculated, not stored:** number of cases (a subquery in the list query, counting archived cases too), latest case, and client status (**active** when they have at least one open case, **inactive** otherwise). All three are built as subqueries in the clients list query (the latest case is the most recently updated one; active means at least one case that is not `closed` and not archived), always joined on `client_id` and `user_id`.
+**Calculated, not stored:** number of cases (a subquery in the list query, counting archived cases too), latest case, and client status (**active** when they have at least one open case, **inactive** otherwise). All three are built as subqueries in the clients list query (the latest case is the most recently updated one; active means at least one case that is not `closed` and not archived), always joined on `client_id` and `user_id`. The client page's four numbers (total cases, ongoing, active or not, latest case number) are calculated in memory from the cases the page already loads, so they need no extra query; the "active" rule exists twice (SQL in the list, JS in the client page) and both must change together.
 
 **Deleting:** only possible when the client has no cases (the database enforces it with a foreign key error, code `23503`, translated to a friendly message). Otherwise the client is archived.
 
@@ -263,6 +265,7 @@ Files stay in private storage and are opened through short-lived signed links, g
 - **`updated_at` on every table** is what lets the dashboard show recently updated cases.
 - **Enums instead of free text** for case type, case status, hearing type, hearing status and deadline status, so typos can never reach the database.
 - **No duplicated data:** a client's name is never copied into `cases`, it is always read through the relationship.
+- **View state is never stored:** the page size, the search text, the filters, the archived tab and the open case tab live in the link only, so they cost no column and no table.
 - **Calculated values are never stored:** case count, last case, next hearing, urgent, active/inactive, paid, overdue and outstanding.
 
 ## Changes from the first draft
@@ -282,6 +285,7 @@ Files stay in private storage and are opened through short-lived signed links, g
 - Deadlines built as designed, plus "edit only while pending" and reopening.
 - Reminders built on the existing columns: no schema change.
 - Client details page, "latest case" and active/inactive built as calculated values: no schema change.
+- UI redesign (case tabs, client stats, settings page, page size, loading skeletons): no schema change and no migration.
 
 ## Open questions
 

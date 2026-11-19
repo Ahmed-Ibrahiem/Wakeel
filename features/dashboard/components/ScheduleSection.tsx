@@ -14,7 +14,7 @@ const ROW_GRID =
   "grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.8fr)_minmax(0,0.6fr)_minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-center lg:gap-4";
 
 export function PanelSkeleton() {
-  return <div className="h-56 animate-pulse rounded-sm border bg-muted/40" />;
+  return <div className="h-56 animate-pulse rounded-sm border bg-muted/40 w-full" />;
 }
 
 export async function ScheduleSection() {
@@ -27,7 +27,7 @@ export async function ScheduleSection() {
   const moreUndecided = stats.undecidedHearings - undecided.items.length;
 
   return (
-    <section className="space-y-3 rounded-sm border bg-background p-4">
+    <section className="animate-fade-in space-y-3 rounded-sm border bg-background p-4 w-full ">
       <h2 className="flex items-center gap-2 text-lg font-bold">
         <CalendarDays className="size-5 text-primary" aria-hidden />
         جلسات اليوم وغداً
@@ -73,7 +73,7 @@ export async function ScheduleSection() {
           لا يوجد جلسات هذا اليوم او غدا.
         </p>
       ) : (
-        <div>
+        <div className="xl:min-h-36 xl:max-h-37 overflow-y-auto">
           <div
             className={cn(
               ROW_GRID,

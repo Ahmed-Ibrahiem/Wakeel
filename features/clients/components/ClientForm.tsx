@@ -4,13 +4,14 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Check, Contact, Loader2, UserPen, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { InputWithLabel } from "@/components/inputs/InputWithLabel";
 import { PhoneInput } from "@/components/inputs/PhoneInput";
 import { createClient, updateClient } from "../actions";
 import { clientFormSchema, type ClientFormValues } from "../schemas";
+import { FormSection } from "@/components/shared/FormSection";
 
 type Props = {
   today: string;
@@ -51,57 +52,70 @@ export function ClientForm({ today, clientId, initialValues }: Props) {
   return (
     <FormProvider {...form}>
       <form
+        className="space-y-5"
         onSubmit={form.handleSubmit(onSubmit)}
         noValidate
-        className="space-y-7 rounded-sm border bg-background p-6"
       >
-        <InputWithLabel<ClientFormValues>
-          fieldName="الاسم بالكامل"
-          nameInSchema="fullName"
-          autoComplete="nope"
-        />
+        <FormSection title="بيانات الموكل" icon={UserPen} className="p-6!">
+          <div className="grid gap-5 grid-cols-1 md:grid-cols-2">
+            <InputWithLabel<ClientFormValues>
+              fieldName="الاسم بالكامل"
+              nameInSchema="fullName"
+              autoComplete="nope"
+            />
 
-        <div className="grid gap-7 md:grid-cols-2">
-          <InputWithLabel<ClientFormValues>
-            fieldName="البريد الإلكتروني (اختياري)"
-            nameInSchema="email"
-            type="email"
-            dir="ltr"
-            autoComplete="nope"
-          />
-          <InputWithLabel<ClientFormValues>
-            fieldName="تاريخ أول تعامل"
-            nameInSchema="firstContactDate"
-            type="date"
-            max={today}
-          />
-        </div>
+            <InputWithLabel<ClientFormValues>
+              fieldName="تاريخ أول تعامل"
+              nameInSchema="firstContactDate"
+              type="date"
+              max={today}
+            />
+          </div>
+        </FormSection>
 
-        <PhoneInput<ClientFormValues>
-          label="رقم الهاتف (اختياري)"
-          dialCodeName="dialCode"
-          phoneName="phoneLocal"
-        />
+        <FormSection title="بيانات التواصل" icon={Contact} className="p-6!">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <InputWithLabel<ClientFormValues>
+              fieldName="البريد الإلكتروني (اختياري)"
+              nameInSchema="email"
+              type="email"
+              dir="ltr"
+              autoComplete="nope"
+            />
 
-        <InputWithLabel<ClientFormValues>
-          fieldName="العنوان (اختياري)"
-          nameInSchema="address"
-          autoComplete="nope"
-        />
+            <PhoneInput<ClientFormValues>
+              label="رقم الهاتف (اختياري)"
+              dialCodeName="dialCode"
+              phoneName="phoneLocal"
+            />
 
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button asChild variant="outline" className="rounded-sm!">
-            <Link href="/dashboard/clients">إلغاء</Link>
-          </Button>
+            <InputWithLabel<ClientFormValues>
+              fieldName="العنوان (اختياري)"
+              nameInSchema="address"
+              autoComplete="nope"
+            />
+          </div>
+        </FormSection>
+
+        <div className="flex flex-col gap-3 sm:flex-row ">
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="rounded-sm!"
+            className="rounded-sm! h-10"
           >
-            {form.formState.isSubmitting && (
+            
+            {form.formState.isSubmitting ? (
               <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Check className="size-4" />
             )}
             {isEdit ? "حفظ التعديلات" : "حفظ العميل"}
+          </Button>
+          <Button asChild variant="outline" className="rounded-sm! h-10">
+            <Link href="/dashboard/clients">
+              <X className="size-4" />
+              إلغاء
+            </Link>
           </Button>
         </div>
       </form>
