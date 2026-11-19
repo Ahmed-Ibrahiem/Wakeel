@@ -28,7 +28,7 @@ export function ClientsTable({
   archived: boolean;
 }) {
   return (
-    <div className="h-117 overflow-y-auto">
+    <div className="h-117 overflow-y-auto ">
       <Table>
         <TableHeader>
           <TableRow className="bg-accent hover:bg-accent! border-1 border-border rounded-sm! text-center!">

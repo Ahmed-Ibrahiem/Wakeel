@@ -43,7 +43,7 @@ function StatCard({
   );
 
   return (
-    <div className="flex-start gap-4 rounded-sm border bg-background p-4">
+    <div className="flex-start gap-4 rounded-sm border bg-background p-3">
       <div className={cn("rounded-full p-3", TONES[tone])}>
         <Icon className="size-6" aria-hidden />
       </div>
@@ -66,7 +66,7 @@ export async function DashboardStats() {
   const s = await dashboardStats();
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="animate-fade-in grid gap-4 sm:grid-cols-2 xl:grid-cols-4 w-full">
       <StatCard
         icon={FolderOpen}
         tone="green"
@@ -112,7 +112,7 @@ export async function DashboardStats() {
 
 export function StatsSkeleton() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="w-full grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {Array.from({ length: 4 }, (_, i) => (
         <div
           key={i}

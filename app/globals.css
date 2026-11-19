@@ -584,12 +584,12 @@
 }
 
 ::-webkit-scrollbar {
-  width: 8px; 
+  width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9; 
+  background: #f1f5f9;
   border-radius: 4px;
 }
 
@@ -600,5 +600,25 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-emerald-dark); 
+  background: var(--color-emerald-dark);
+}
+
+/* Soft entrance for page content. Plays once when the element mounts. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.35s ease-out both;
+
+  /* Respect users who turned animations off in their OS */
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }

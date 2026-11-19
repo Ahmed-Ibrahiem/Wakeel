@@ -1,7 +1,5 @@
-import {
-  optionalText,
-  requiredText
-} from "@/lib/validations/text";
+import { pageSizeSchema } from "@/lib/pagination";
+import { optionalText, requiredText } from "@/lib/validations/text";
 import { z } from "zod";
 
 // Keep in sync with db/schema/enums.ts (TypeScript will complain on insert if they drift)
@@ -14,7 +12,6 @@ export const CASE_TYPES = [
   "other",
 ] as const;
 export const CASE_STATUSES = ["ongoing", "postponed", "closed"] as const;
-export const DEFAULT_PAGE_SIZE = 8;
 
 export const caseIdSchema = z.uuid();
 
@@ -22,7 +19,7 @@ export const caseIdSchema = z.uuid();
 export const caseListParamsSchema = z.object({
   q: z.string().trim().max(100).catch(""),
   page: z.coerce.number().int().min(1).max(10000).catch(1),
-  pageSize: z.coerce.number().int().min(1).max(50).catch(DEFAULT_PAGE_SIZE),
+  pageSize: pageSizeSchema,
   status: z.enum(["all", ...CASE_STATUSES]).catch("all"),
   archived: z
     .string()

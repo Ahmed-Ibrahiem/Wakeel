@@ -21,7 +21,7 @@ export async function DeadlinesPanel() {
   const more = stats.pendingDeadlines - items.length;
 
   return (
-    <section className="space-y-3 rounded-sm border bg-background p-4">
+    <section className="animate-fade-in space-y-2 rounded-sm border bg-background p-4">
       <h2 className="flex items-center gap-2 text-lg font-bold">
         <AlarmClock className="size-5 text-primary" aria-hidden />
         المواعيد النهائية

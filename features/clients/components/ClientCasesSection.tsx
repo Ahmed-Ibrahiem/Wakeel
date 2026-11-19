@@ -1,40 +1,53 @@
 import { Briefcase } from "lucide-react";
 import { EmptyState } from "@/components/shared/EmptyState";
-import { requireSession } from "@/lib/session";
-import { getUserSettings } from "@/lib/userSettings";
-import { listClientCases } from "@/features/cases/queries";
-import { CaseCard } from "@/features/cases/components/CaseCard";
+import { formatLongDate } from "@/lib/format-date";
+import { getCaseSignals } from "@/features/cases/signals";
+import {
+  CASE_STATUS_LABELS,
+  CASE_STATUS_STYLES,
+  CASE_TYPE_LABELS,
+} from "@/features/cases/labels";
+import { ClientCasesTable, type ClientCaseRow } from "./ClientCasesTable";
 
-export async function ClientCasesSection({ clientId }: { clientId: string }) {
-  const { user } = await requireSession();
+type CaseItem = Parameters<typeof getCaseSignals>[0] & {
+  id: string;
+  caseNumber: string;
+  caseType: string;
+  courtName: string;
+  status: string;
+  archivedAt: Date | null;
+  updatedAt: Date;
+};
 
-  const [items, settings] = await Promise.all([
-    listClientCases(clientId),
-    getUserSettings(user.id),
-  ]);
+export function ClientCasesSection({
+  cases,
+  timeZone,
+}: {
+  cases: CaseItem[];
+  timeZone: string;
+}) {
+  if (cases.length === 0) {
+    return (
+      <EmptyState
+        icon={Briefcase}
+        title="لا توجد قضايا لهذا العميل"
+        description="عند إضافة قضية لهذا العميل ستظهر هنا."
+      />
+    );
+  }
 
-  return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-bold">القضايا ({items.length})</h2>
+  const rows: ClientCaseRow[] = cases.map((c) => ({
+    id: c.id,
+    caseNumber: c.caseNumber,
+    typeLabel: CASE_TYPE_LABELS[c.caseType] ?? c.caseType,
+    courtName: c.courtName,
+    status: c.status,
+    statusLabel: CASE_STATUS_LABELS[c.status] ?? c.status,
+    statusStyle: CASE_STATUS_STYLES[c.status] ?? "",
+    archived: Boolean(c.archivedAt),
+    urgent: getCaseSignals(c, timeZone).urgent,
+    updatedLabel: formatLongDate(c.updatedAt, timeZone),
+  }));
 
-      {items.length === 0 ? (
-        <EmptyState
-          icon={Briefcase}
-          title="لا توجد قضايا لهذا العميل"
-          description="عند إضافة قضية لهذا العميل ستظهر هنا."
-        />
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {items.map((item) => (
-            <CaseCard
-              key={item.id}
-              item={item}
-              archived={Boolean(item.archivedAt)}
-              timezone={settings.timeZone}
-            />
-          ))}
-        </div>
-      )}
-    </section>
-  );
+  return <ClientCasesTable rows={rows} />;
 }

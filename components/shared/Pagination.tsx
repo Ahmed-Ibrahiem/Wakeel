@@ -34,7 +34,7 @@ export function Pagination({ page, totalPages, hrefFor }: Props) {
   });
 
   return (
-    <nav aria-label="التنقل بين الصفحات" className="flex items-center gap-1 mt-5">
+    <nav aria-label="التنقل بين الصفحات" className="flex items-center gap-1 ">
       {page > 1 ? (
         <Link
           href={hrefFor(page - 1)}

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { archiveClient, deleteClient, restoreClient } from "../actions";
+import { useRouter } from "next/navigation";
 
 type Result = { success: true } | { success: false; message: string };
 
@@ -28,6 +29,7 @@ type ConfirmProps = {
   successMessage: string;
   destructive?: boolean;
   onConfirm: () => Promise<Result>;
+  onSuccess?: () => void;
 };
 
 function ConfirmButton({
@@ -39,6 +41,7 @@ function ConfirmButton({
   successMessage,
   destructive,
   onConfirm,
+  onSuccess,
 }: ConfirmProps) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -52,6 +55,7 @@ function ConfirmButton({
       }
       toast.success(successMessage);
       setOpen(false);
+      onSuccess?.();
     });
 
   return (
@@ -70,7 +74,9 @@ function ConfirmButton({
           <AlertDialogCancel disabled={pending}>إلغاء</AlertDialogCancel>
           <AlertDialogAction
             disabled={pending}
-            className={buttonVariants({ variant: destructive ? "destructive" : "default" })}
+            className={buttonVariants({
+              variant: destructive ? "destructive" : "default",
+            })}
             onClick={(e) => {
               e.preventDefault(); // نمنع القفل التلقائي لحد ما السيرفر يرد
               run();
@@ -120,11 +126,14 @@ export function ClientRowActions({
   id,
   name,
   archived,
+  afterDeleteHref,
 }: {
   id: string;
   name: string;
   archived: boolean;
+  afterDeleteHref?: string; // where to go after a delete (used on the details page)
 }) {
+  const router = useRouter();
   return (
     <>
       {archived ? (
@@ -149,6 +158,9 @@ export function ClientRowActions({
         successMessage="تم حذف العميل"
         destructive
         onConfirm={() => deleteClient(id)}
+        onSuccess={
+          afterDeleteHref ? () => router.push(afterDeleteHref) : undefined
+        }
       />
     </>
   );

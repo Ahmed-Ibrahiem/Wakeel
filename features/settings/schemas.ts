@@ -37,3 +37,10 @@ export const settingsFormSchema = z.object({
 });
 
 export type SettingsFormValues = z.infer<typeof settingsFormSchema>;
+
+// Single source of truth for the defaults: used by the "reset" button and as the page fallback
+export const DEFAULT_SETTINGS: SettingsFormValues = {
+  timeZone: "Africa/Cairo",
+  reminderDays: "1",
+  reminderHours: "3",
+};

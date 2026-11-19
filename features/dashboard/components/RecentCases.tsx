@@ -13,15 +13,15 @@ export async function RecentCases() {
   const items = await recentCases();
 
   return (
-    <section className="space-y-3 rounded-sm border bg-background p-4">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-lg font-bold">
+    <section className="animate-fade-in space-y-2 rounded-sm border bg-background p-4">
+      <div className="flex-between gap-3">
+        <h2 className="flex-start gap-2 text-lg font-bold">
           <FileText className="size-5 text-primary" aria-hidden />
           آخر القضايا المحدّثة
         </h2>
         <Link
           href={CASES_BASE}
-          className="flex items-center gap-1 text-sm text-primary hover:underline"
+          className="flex-start gap-1 text-sm text-primary hover:underline"
         >
           عرض الكل
           <ChevronLeft className="size-4" aria-hidden />
@@ -36,7 +36,7 @@ export async function RecentCases() {
           </Link>
         </p>
       ) : (
-        <ul className="divide-y lg:max-h-39 lg:overflow-y-auto pe-1.5">
+        <ul className="divide-y xl:max-h-full xl:h-37 xl:overflow-y-auto pe-1.5">
           {items.map((c) => (
             <li key={c.id}>
               <Link

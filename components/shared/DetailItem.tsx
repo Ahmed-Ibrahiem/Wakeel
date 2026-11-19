@@ -8,7 +8,7 @@ export function DetailItem({
 }) {
   return (
     <div>
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-sm text-muted-foreground">{label}</p>
       <div className="mt-1 text-sm font-medium wrap-break-word">{children}</div>
     </div>
   );

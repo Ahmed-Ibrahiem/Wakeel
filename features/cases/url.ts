@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_SIZE } from "./schemas";
+import { DEFAULT_PAGE_SIZE } from "@/lib/pagination";
 
 export const CASES_BASE = "/dashboard/cases";
 
