@@ -8,7 +8,7 @@ Check each story off once it's fully built and working.
 
 ## 1. Authentication
 
-- [x] **As a** lawyer, **I want to** create an account with my email or my Google account, **so that** I can start using the system without friction. `v1`
+- [x] **As a** lawyer, **I want to** create an account with  email or my Google account, **so that** I can start using the system without friction. `v1`
 - [x] **As a** lawyer, **I want to** confirm my email address, **so that** nobody can open an account in my name. `v1`
 - [x] **As a** lawyer, **I want to** log in to access my data, **so that** my account stays protected and private. `v1`
 - [x] **As a** lawyer, **I want to** reset my password if I forget it, **so that** I'm not permanently locked out of my own data. `v1`
@@ -17,7 +17,7 @@ Check each story off once it's fully built and working.
 
 ## 2. Landing Page
 
-- [x] **As a** visitor, **I want to** see a simple landing page that explains what the system is and what it does, **so that** I understand it before I sign up. `v1`
+- [x] **As a** visitor, **I want to** see a simple landing page that explains what the system is and what it does, **so that** I understand it before I sign up. `v1`my
 
 ## 3. Dashboard Home
 

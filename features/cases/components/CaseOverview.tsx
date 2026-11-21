@@ -90,15 +90,14 @@ export async function CaseOverview({
   const upcoming = buildUpcoming(upcomingHearings, upcomingDeadlines, timeZone);
 
   return (
-    <div >
-      {/* Main column: first in the DOM, so it sits on the right in RTL */}
-      <div className="grid gap-3 xl:grid-cols-3">
+    <div>
+      <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
         <FormSection
-          className="xl:col-span-2"
+          className="col-span-2"
           title="معلومات القضية الأساسية"
           icon={Info}
         >
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="grid gap-5 grid-cols-2 sm:grid-cols-3">
             <Item label="رقم القضية">
               <span dir="ltr">{item.caseNumber}</span>
             </Item>
@@ -124,7 +123,7 @@ export async function CaseOverview({
           </div>
         </FormSection>
 
-        <FormSection title="الموكل" icon={UserRound}>
+        <FormSection title="الموكل" icon={UserRound} className="max-md:col-span-2">
           <div className="space-y-3">
             {client ? (
               <ClientPreview client={client} />
@@ -144,7 +143,7 @@ export async function CaseOverview({
           title="آخر الجلسات"
           icon={Gavel}
           action={<ViewAll caseId={item.id} />}
-          className="xl:col-span-2"
+          className="col-span-2"
         >
           {recent.length === 0 ? (
             <Empty>لا توجد جلسات سابقة لهذه القضية.</Empty>
@@ -187,7 +186,7 @@ export async function CaseOverview({
           )}
         </FormSection>
 
-        <FormSection title="ملخص القضية" icon={ClipboardList}>
+        <FormSection title="ملخص القضية" icon={ClipboardList} className="max-md:col-span-2">
           <ul className="space-y-3 text-sm">
             <li className="flex-between gap-3">
               <span className="flex-start gap-2 text-muted-foreground">

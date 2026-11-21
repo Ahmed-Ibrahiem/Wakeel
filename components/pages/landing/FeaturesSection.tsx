@@ -58,7 +58,7 @@ const FeaturesSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <SectionHeader title={content.title} desc={content.desc} />
@@ -69,7 +69,7 @@ const FeaturesSection = () => {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.15 }}
           className="features-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
         >
           {content.items.map((item, index) => {

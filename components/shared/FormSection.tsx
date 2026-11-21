@@ -16,7 +16,7 @@ export function FormSection({
 }) {
   return (
     <section
-      className={cn("rounded-sm border bg-background p-3.5 shadow-sm animate-fade-in", className)}
+      className={cn("rounded-sm border bg-background p-3.5 shadow-sm animate-fade-in w-full", className)}
     >
       <div className="flex-between mb-4 gap-2">
         <h2 className="flex-start gap-2 text-base font-bold">

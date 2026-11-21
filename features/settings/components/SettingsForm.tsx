@@ -83,7 +83,7 @@ export function SettingsForm({
         noValidate
         className="space-y-4"
       >
-        <FormSection title="إعدادات التذكير" icon={BellRing}>
+        {/* <FormSection title="إعدادات التذكير" icon={BellRing}>
           <p className="mb-5 text-sm text-muted-foreground">
             حدد متى تصلك رسائل التذكير بالجلسات والمواعيد النهائية.
           </p>
@@ -110,7 +110,7 @@ export function SettingsForm({
               الأيام من الساعة 8 صباحاً بتوقيتك.
             </span>
           </p>
-        </FormSection>
+        </FormSection> */}
 
         <FormSection title="المنطقة الزمنية" icon={Globe}>
           <p className="mb-5 text-sm text-muted-foreground">
