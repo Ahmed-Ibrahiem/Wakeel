@@ -8,7 +8,7 @@ Check each story off once it's fully built and working.
 
 ## 1. Authentication
 
-- [x] **As a** lawyer, **I want to** create an account with  email or my Google account, **so that** I can start using the system without friction. `v1`
+- [x] **As a** lawyer, **I want to** create an account with my email or my Google account, **so that** I can start using the system without friction. `v1`
 - [x] **As a** lawyer, **I want to** confirm my email address, **so that** nobody can open an account in my name. `v1`
 - [x] **As a** lawyer, **I want to** log in to access my data, **so that** my account stays protected and private. `v1`
 - [x] **As a** lawyer, **I want to** reset my password if I forget it, **so that** I'm not permanently locked out of my own data. `v1`
@@ -17,7 +17,7 @@ Check each story off once it's fully built and working.
 
 ## 2. Landing Page
 
-- [x] **As a** visitor, **I want to** see a simple landing page that explains what the system is and what it does, **so that** I understand it before I sign up. `v1`my
+- [x] **As a** visitor, **I want to** see a simple landing page that explains what the system is and what it does, **so that** I understand it before I sign up. `v1`
 
 ## 3. Dashboard Home
 
@@ -51,6 +51,7 @@ Check each story off once it's fully built and working.
 - [x] **As a** lawyer, **I want to** open a case and see its hearings, deadlines and notes together, **so that** I have the full picture on one screen. `v1` (a summary strip on top and four tabs: overview, hearings, deadlines, notes; the overview shows the basics, the last decided hearings, the next upcoming items and the client)
 - [x] **As a** lawyer, **I want to** see a case marked **urgent** when it has a hearing or deadline within 48 hours, **so that** I notice it without checking dates. `v1`
 - [x] **As a** lawyer, **I want to** be warned when an ongoing case has no upcoming hearing, **so that** I don't forget to schedule the next session. `v1`
+- [x] **As a** lawyer who opens "new case" before adding any client, **I want to** be told to add a client first, and to add one from the case form and come back with that client already chosen, **so that** I am never stuck on an empty picker. `v1` (with no clients the page shows a message and an "add client" button instead of the form; the case form also has an "add a new client" link; after saving the client the lawyer returns to the case form with the client selected)
 - [x] **As a** lawyer, **I want to** edit, archive or delete a case (delete only when it has no hearings or deadlines), **so that** my list stays accurate. `v1`
 
 > "Urgent" is calculated from upcoming dates. It is not a status and not a field the lawyer fills in. A case is urgent when its earliest scheduled hearing is within 48 hours **or already past without a decision**, or when a pending deadline is due within 2 days **or already overdue**. Closed and archived cases are never urgent.
@@ -61,9 +62,9 @@ Check each story off once it's fully built and working.
 
 - [x] **As a** lawyer, **I want to** set a hearing date for a case, **so that** it appears on my dashboard. `v1` (the hearing is saved and shown in the case; the dashboard itself comes later)
 - [x] **As a** lawyer, **I want to** record a session's decision and set the next hearing date in one step, **so that** the daily routine after court takes seconds. `v1`
-- [x] **As a** lawyer, **I want to** get an email reminder before a hearing (for example 1 day before and a few hours before), **so that** I never miss a court session. `v1` (built and tested in development; production needs a verified sending domain and the scheduler)
+- [ ] **As a** lawyer, **I want to** get an email reminder before a hearing (for example 1 day before and a few hours before), **so that** I never miss a court session. `later` (the code is built and tested but switched off: it needs a verified sending domain, and there is no budget for a domain yet)
 - [x] **As a** lawyer, **I want to** get warned if two hearings are scheduled too close together, **so that** I don't accidentally double-book myself. `v1`
-- [x] **As a** lawyer, **I want to** track non-hearing deadlines too (last date to file an appeal or a defense memo), with reminders, **so that** I don't lose a case permanently over a missed paperwork deadline. `v1` (deadlines are built: add, edit, delete, overdue / upcoming / done groups; the reminder email arrives N days before the due date)
+- [x] **As a** lawyer, **I want to** track non-hearing deadlines too (last date to file an appeal or a defense memo), **so that** I don't lose a case permanently over a missed paperwork deadline. `v1` (deadlines are built: add, edit, delete, overdue / upcoming / done groups; the reminder email for deadlines is built but switched off together with the hearing reminders)
 - [x] **As a** lawyer, **I want to** mark a deadline as done, **so that** it stops appearing as pending. `v1` (and reopen it if it was a mistake)
 - [ ] **As a** lawyer, **I want to** see all my upcoming dates in a calendar view (monthly/weekly), **so that** I get a full picture of my schedule. `v1.2`
 
@@ -94,7 +95,7 @@ Check each story off once it's fully built and working.
 
 ## 10. Settings
 
-- [x] **As a** lawyer, **I want to** set how many days/hours before a hearing I get reminded, **so that** the reminders match how far ahead I like to prepare. `v1` (the preference is saved and used by the reminder job)
+- [ ] **As a** lawyer, **I want to** set how many days/hours before a hearing I get reminded, **so that** the reminders match how far ahead I like to prepare. `later` (built, but the card is hidden in the settings page until reminders can be sent)
 - [x] **As a** lawyer, **I want to** set my time zone, **so that** "today" and reminder times are correct for me. `v1` (changing it only changes how dates are shown, saved hearings keep their exact moment)
 - [x] **As a** lawyer, **I want to** reset my settings to the defaults in one click and see when I last saved them, **so that** I can undo experiments without remembering the original values. `v1` (the reset only fills the fields, nothing is saved until I press save)
 - [ ] **As a** lawyer, **I want to** change my password and my email, **so that** I can keep my account secure. `later`
@@ -110,11 +111,11 @@ Check each story off once it's fully built and working.
 
 ## 12. Quality (applies to everything)
 
-These stay open until every v1 feature is done. Verified so far: authentication, clients, cases, hearings and deadlines (cross-account tests passed).
+All three are done for v1. They apply to everything, so they must be checked again whenever a screen is added.
 
-- [ ] **As a** lawyer, **I want** my data to be invisible to every other lawyer, **so that** my clients' information stays confidential. `v1`
-- [ ] **As a** lawyer, **I want** every page to work on my phone, **so that** I can use it at court. `v1`
-- [ ] **As a** lawyer, **I want** empty, loading and error states on every screen, **so that** I always know what is happening. `v1`
+- [x] **As a** lawyer, **I want** my data to be invisible to every other lawyer, **so that** my clients' information stays confidential. `v1` (cross-account tests passed for authentication, clients, cases, hearings, deadlines and settings; the dashboard, the client page and the case tabs reuse the same tested queries)
+- [x] **As a** lawyer, **I want** every page to work on my phone, **so that** I can use it at court. `v1` (checked page by page by the owner)
+- [x] **As a** lawyer, **I want** empty, loading and error states on every screen, **so that** I always know what is happening. `v1` (loading skeletons for the list, details and form pages; an error page for the dashboard and one for the rest of the site; an Arabic 404 for unknown links; the settings page has no loading state because it loads instantly)
 
 ---
 
@@ -127,14 +128,18 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 - [x] Case card signals (next hearing, nearest deadline, urgent badge, "no upcoming hearing" warning)
 - [x] Hearings (create, edit, delete, decision + next hearing in one step, conflict warning)
 - [x] Deadlines (create, edit, delete, mark done / reopen, overdue grouping)
-- [x] Email reminders for hearings and deadlines (go-live needs a verified domain and the scheduler)
+- [ ] Email reminders for hearings and deadlines: built and tested, **on hold** until a verified sending domain exists (moved out of v1 for now)
 - [x] Dashboard (hearings, deadlines, caseload, recent cases)
-- [x] Settings (reminder preferences, time zone)
+- [x] Settings (time zone; the reminder card is hidden while reminders are on hold)
 - [x] UI redesign of the form, details and settings pages (tabs on the case page, client page with stats, loading skeletons, user-chosen page size)
+- [x] Quality pass: isolation, phone layout, and empty / loading / error states on every screen (section 12)
+- [x] Deployed on Vercel (a push to `main` deploys automatically)
 
 **v1.1** Billing: agreed fee, payments with due dates, overdue and outstanding widgets.
 
 **v1.2** Documents (private storage) and the full calendar.
+
+**On hold** Email reminders for hearings and deadlines. The code, the columns and the endpoint are ready; they wait for a verified sending domain (Resend only delivers to the account owner without one).
 
 **Later** Invoices, global search, monthly reports, in-app notifications, case activity feed, conflict-of-interest check, call log, account settings.
 
@@ -161,11 +166,14 @@ These stay open until every v1 feature is done. Verified so far: authentication,
 17. **Overdue things count as urgent:** a hearing in the past with no decision, and a pending deadline whose date has passed, keep the case marked urgent until they are handled.
 18. **Dashboard:** the four cards are ongoing cases, today's hearings, hearings in the next 7 days (not a calendar week, to avoid the question of which day a week starts) and pending deadlines (with the overdue ones counted apart). The billing card and widget wait for v1.1. Archived cases never count. Past hearings that are still "scheduled" get their own box, otherwise nobody would see them.
 19. **Settings:** the time zone is chosen from a fixed list (an invalid name would break every date on screen), and the reminder timing from fixed options, with "none" available for both. Changing the zone never moves a saved hearing.
-20. **Reminders:** an email goes out once per reminder, never for something already past; day-based reminders arrive from 08:00 in the lawyer's own time zone, hour-based ones inside the chosen window; deadlines have a day reminder only (a date has no time); changing a date makes the new date get its own reminder; if sending fails it is retried on the next run.
+20. **Reminders:** an email goes out once per reminder, never for something already past; day-based reminders arrive from 08:00 in the lawyer's own time zone, hour-based ones inside the chosen window; deadlines have a day reminder only (a date has no time); changing a date makes the new date get its own reminder; if sending fails it is retried on the next run. **On hold:** see decision 26.
 21. **Clients:** a client is active when they have at least one case that is not closed and not archived; the latest case is the most recently updated one; an archived client's page still opens and lists their cases; opening a client (or case) that does not exist or belongs to someone else shows the same "not found" page.
 22. **Case details are tabs** driven by the link (`?tab=`): overview, hearings, deadlines, notes. Only the open tab loads its data. A wrong tab name falls back to the overview.
 23. **Page size** comes from one fixed list (8, 12, 24, 48) that the lawyer picks from; the server accepts only those values and uses 8 for anything else. The control is separate from the page numbers so it stays visible when only one page is left.
-24. **Settings reset** restores the defaults (Cairo, 1 day, 3 hours) without saving. The labels say that the day reminder covers hearings and deadlines while the hour reminder covers hearings only, and that day reminders arrive from 08:00 in the lawyer's zone.
+24. **Settings reset** restores the defaults (Cairo, 1 day, 3 hours) without saving. The labels say that the day reminder covers hearings and deadlines while the hour reminder covers hearings only, and that day reminders arrive from 08:00 in the lawyer's zone. While reminders are on hold the reminder card is hidden.
 25. **Redesigned screens** follow the owner's designs without adding fields outside v1 (no short description, no start date, opposing party optional, court as free text, no bell). Every details or form page has a loading skeleton with the same layout, so nothing jumps when the data arrives.
+26. **Reminders are on hold.** A reminder email can only reach a lawyer from a verified sending domain, and there is no budget for a domain yet (Resend's test sender delivers only to the account owner). The code, the database columns and the secret-protected endpoint stay as they are, nothing calls the endpoint, and the reminder card is hidden in the settings page so the screen does not promise something that does not happen. Bringing it back needs a domain, one setting, the scheduler and showing the card again, with no migration.
+27. **Interface scale:** the pages were designed with the browser at 90%, so the root font size is set to 90% (`html { font-size: 90% }`) and every rem-based size follows it.
+28. **Adding a client from the case form:** a case always belongs to a client, so with no clients the new-case page shows a message and a button instead of an unusable form, and the form offers an "add a new client" link even when clients exist. The link carries a flag (`?from=case`, one fixed value, never a URL); after saving, the lawyer comes back to the case form with the new client selected. The client id in the link is used only if it is in the lawyer's own client list.
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).

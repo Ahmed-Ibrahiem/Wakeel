@@ -17,9 +17,15 @@ type Props = {
   today: string;
   clientId?: string; // If it exists, it remains an amendment, if it does not remain an addition
   initialValues?: ClientFormValues;
+  fromCase?: boolean; // opened from "add case": go back there after saving
 };
 
-export function ClientForm({ today, clientId, initialValues }: Props) {
+export function ClientForm({
+  today,
+  clientId,
+  initialValues,
+  fromCase,
+}: Props) {
   const router = useRouter();
   const isEdit = Boolean(clientId);
 
@@ -46,7 +52,13 @@ export function ClientForm({ today, clientId, initialValues }: Props) {
     }
 
     toast.success(isEdit ? "تم حفظ التعديلات" : "تمت إضافة العميل");
-    router.push("/dashboard/clients");
+    // createClient returns the new id; updateClient does not
+    const newClientId = "id" in result ? result.id : null;
+    router.push(
+      fromCase && newClientId
+        ? `/dashboard/cases/new?clientId=${newClientId}`
+        : "/dashboard/clients",
+    );
   };
 
   return (
@@ -103,7 +115,6 @@ export function ClientForm({ today, clientId, initialValues }: Props) {
             disabled={form.formState.isSubmitting}
             className="rounded-sm! h-10"
           >
-            
             {form.formState.isSubmitting ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
@@ -112,7 +123,9 @@ export function ClientForm({ today, clientId, initialValues }: Props) {
             {isEdit ? "حفظ التعديلات" : "حفظ العميل"}
           </Button>
           <Button asChild variant="outline" className="rounded-sm! h-10">
-            <Link href="/dashboard/clients">
+            <Link
+              href={fromCase ? "/dashboard/cases/new" : "/dashboard/clients"}
+            >
               <X className="size-4" />
               إلغاء
             </Link>

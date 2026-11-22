@@ -19,11 +19,11 @@ Lawyers often manage clients, case files, and — most critically — court hear
 - **Deadlines** — non-hearing dates (such as the last day to appeal) with overdue, upcoming and done groups
 - **Case card signals** — urgent badge, next hearing and nearest deadline directly on the card
 - **Dashboard** — today's and tomorrow's hearings, hearings that still have no decision, upcoming deadlines, caseload numbers and recently updated cases
-- **Email reminders** — a reminder some days and/or some hours before a hearing, and some days before a deadline, sent in Modern Standard Arabic and timed in the lawyer's own time zone
-- **Settings** — time zone and reminder timing, saved per lawyer, with a one-click return to the defaults
+- **Settings** — time zone, saved per lawyer, with a one-click return to the defaults
 
 **Planned**
 
+- **Email reminders** — built and tested (days and/or hours before a hearing, days before a deadline, in Modern Standard Arabic and in the lawyer's own time zone) but switched off until a verified sending domain exists
 - **Billing (v1.1)** — agreed fee per case, payments with due dates, overdue and outstanding widgets
 - **Documents and calendar (v1.2)** — file uploads in private storage opened through short-lived signed links, and a full calendar
 
@@ -40,7 +40,7 @@ Lawyers often manage clients, case files, and — most critically — court hear
 | Forms and validation | React Hook Form and Zod 4 (one schema shared by the form and the server action) |
 | Email | Resend |
 | Scheduled reminders | An external cron calling a secret-protected endpoint (see Reminders) |
-| Hosting | Vercel (planned) |
+| Hosting | Vercel (a push to `main` deploys automatically) |
 
 ## Security
 
@@ -64,7 +64,9 @@ Every lawyer's data is private to them, and the code is written to keep it that 
 - **Serverless database constraints:** the Neon HTTP driver has no interactive transactions, so multi-step writes use one `db.batch` and queries prefer subqueries over several round trips.
 - **Interface language:** the UI text is Modern Standard Arabic and the layout is right-to-left.
 
-## Reminders
+## Reminders (on hold)
+
+The feature is built and tested, but it is switched off: without a verified sending domain, Resend only delivers to the account owner. The settings page hides the reminder card, and nothing calls the endpoint. The design below is what runs once a domain exists.
 
 An external scheduler (for example cron-job.org every 5 minutes) calls `GET /api/cron/reminders` with the header `Authorization: Bearer <CRON_SECRET>`. The endpoint finds the reminders that are due, claims each one, and sends the email through Resend. Vercel's free-plan cron runs only once a day, which is too coarse for "a few hours before", so it is not used for this.
 
@@ -72,7 +74,7 @@ Sending to people other than the Resend account owner requires a verified sendin
 
 ## Project Status
 
-v1 is built and tested in development. Before real lawyers use it: a verified sending domain and the scheduler for reminders, the pre-launch checklist (security headers, secrets handling, a separate production database, privacy and terms pages), and then billing (v1.1).
+v1 is built, tested and deployed on Vercel. Email reminders are on hold until a sending domain is available. Before real lawyers use it: a clean production database, the pre-launch checklist (security headers, secrets handling, privacy and terms pages), and then billing (v1.1).
 
 ## Documentation
 

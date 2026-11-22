@@ -5,11 +5,20 @@ import { todayIn } from "@/lib/dates";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { UserPlus } from "lucide-react";
+import { first } from "@/lib/query-utils";
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-export default async function NewClientPage() {
+export default async function NewClientPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
   const { user } = await requireSession();
   const settings = await getUserSettings(user.id);
   const timezone = settings?.timeZone ?? "UTC";
+
+  // Only the exact value "case" counts: it is a flag, never a URL to redirect to
+  const fromCase = first((await searchParams).from) === "case";
 
   return (
     <div className="mx-auto max-w-8xl space-y-5">
@@ -28,7 +37,7 @@ export default async function NewClientPage() {
         />
       </div>
 
-      <ClientForm today={todayIn(timezone)} />
+      <ClientForm today={todayIn(timezone)} fromCase={fromCase} />
     </div>
   );
 }

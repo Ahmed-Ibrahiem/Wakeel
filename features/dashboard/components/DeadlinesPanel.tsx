@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlarmClock } from "lucide-react";
+import { AlarmClock, FilePen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { daysBetween } from "@/lib/dates";
 import { CASES_BASE } from "@/features/cases/url";
@@ -21,18 +21,19 @@ export async function DeadlinesPanel() {
   const more = stats.pendingDeadlines - items.length;
 
   return (
-    <section className="animate-fade-in space-y-2 rounded-sm border bg-background p-4">
+    <section className="animate-fade-in flex-col-start gap-2 rounded-sm border bg-background p-4">
       <h2 className="flex items-center gap-2 text-lg font-bold">
         <AlarmClock className="size-5 text-primary" aria-hidden />
         المواعيد النهائية
       </h2>
 
       {items.length === 0 ? (
-        <p className="py-6 text-center text-sm text-muted-foreground">
-          لا يوجد مواعيد نهائية معلّقة.
-        </p>
+        <div className="flex-col-center gap-3 w-full grow text-muted-foreground">
+          <FilePen className="size-8" />
+          <p className="text-center text-sm ">لا يوجد مواعيد نهائية معلّقة.</p>
+        </div>
       ) : (
-        <ul className="divide-y">
+        <ul className="divide-y w-full">
           {items.map((d) => {
             const days = daysBetween(today, d.dueDate);
             const overdue = days < 0;
@@ -41,7 +42,7 @@ export async function DeadlinesPanel() {
               <li key={d.id}>
                 <Link
                   href={`${CASES_BASE}/${d.caseId}`}
-                  className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 hover:text-primary"
+                  className="flex-between flex-wrap gap-x-4 gap-y-1 py-3 hover:text-primary w-full"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{d.title}</p>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronLeft, FileText } from "lucide-react";
+import { Briefcase, ChevronLeft, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { timeAgo } from "@/lib/relative-time";
 import { CASES_BASE } from "@/features/cases/url";
@@ -13,8 +13,8 @@ export async function RecentCases() {
   const items = await recentCases();
 
   return (
-    <section className="animate-fade-in space-y-2 rounded-sm border bg-background p-4">
-      <div className="flex-between gap-3">
+    <section className="animate-fade-in flex-col-start gap-2 rounded-sm border bg-background p-4">
+      <div className="flex-between gap-3 w-full">
         <h2 className="flex-start gap-2 text-lg font-bold">
           <FileText className="size-5 text-primary" aria-hidden />
           آخر القضايا المحدّثة
@@ -29,14 +29,17 @@ export async function RecentCases() {
       </div>
 
       {items.length === 0 ? (
-        <p className="py-6 text-center text-sm text-muted-foreground">
-          لا يوجد قضايا حتي الأن.{" "}
-          <Link href={`${CASES_BASE}/new`} className="text-primary underline">
-            أضف أول قضية
-          </Link>
-        </p>
+        <div className="flex-col-center gap-3 w-full text-muted-foreground grow">
+          <Briefcase className="size-8" />
+          <div className="w-full flex-col-center">
+            <p className="text-center text-sm ">لا يوجد قضايا حتي الأن. </p>
+            <Link href={`${CASES_BASE}/new`} className="text-primary underline">
+              أضف أول قضية
+            </Link>
+          </div>
+        </div>
       ) : (
-        <ul className="divide-y xl:max-h-full xl:h-37 xl:overflow-y-auto pe-1.5">
+        <ul className="divide-y xl:max-h-full xl:h-37 xl:overflow-y-auto pe-1.5 w-full">
           {items.map((c) => (
             <li key={c.id}>
               <Link
@@ -44,9 +47,7 @@ export async function RecentCases() {
                 className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 hover:text-primary"
               >
                 <div className="min-w-0">
-                  <p className="text-sm font-bold" >
-                    {c.caseNumber}
-                  </p>
+                  <p className="text-sm font-bold">{c.caseNumber}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {c.clientName} · {c.courtName}
                   </p>

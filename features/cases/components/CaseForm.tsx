@@ -38,6 +38,7 @@ type Props = {
   clients: ClientOption[];
   caseId?: string; // if it exists it's an edit, otherwise an addition
   initialValues?: CaseFormValues;
+  defaultClientId?: string;
 };
 
 function Field({
@@ -64,7 +65,12 @@ function Field({
   );
 }
 
-export function CaseForm({ clients, caseId, initialValues }: Props) {
+export function CaseForm({
+  clients,
+  caseId,
+  initialValues,
+  defaultClientId,
+}: Props) {
   const router = useRouter();
   const isEdit = Boolean(caseId);
 
@@ -72,7 +78,7 @@ export function CaseForm({ clients, caseId, initialValues }: Props) {
   const form = useForm<CaseFormValues>({
     resolver: zodResolver(caseFormSchema),
     defaultValues: initialValues ?? {
-      clientId: "",
+      clientId: defaultClientId ?? "",
       caseNumber: "",
       caseType: "civil",
       courtName: "",
@@ -132,13 +138,26 @@ export function CaseForm({ clients, caseId, initialValues }: Props) {
 
         <FormSection title="بيانات الموكل" icon={UserRound} className="p-6!">
           <div className="grid gap-5 md:grid-cols-2">
-            <SelectWithLabel
-              fieldName="الموكل"
-              nameInSchema="clientId"
-              placeholder="اختر الموكل"
-              options={clients.map((c) => ({ id: c.id, label: c.fullName }))}
-              className="py-5!"
-            />
+            <div>
+              <SelectWithLabel
+                fieldName="الموكل"
+                nameInSchema="clientId"
+                placeholder="اختر الموكل"
+                options={clients.map((c) => ({ id: c.id, label: c.fullName }))}
+                className="py-5!"
+              />
+              {!isEdit && (
+                <p className="mt-3 text-sm text-muted-foreground">
+                  الموكل غير موجود في القائمة؟{" "}
+                  <Link
+                    href="/dashboard/clients/new?from=case"
+                    className="font-medium text-primary hover:underline"
+                  >
+                    أضف عميلاً جديداً
+                  </Link>
+                </p>
+              )}
+            </div>
             <ClientPreview client={selectedClient} />
           </div>
         </FormSection>

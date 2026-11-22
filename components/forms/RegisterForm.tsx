@@ -155,13 +155,19 @@ const RegisterForm = () => {
             onClick={signInWithGoogle}
             disabled={loading || form.formState.isSubmitting}
           >
-            <Image
-              src={"/images/google.png"}
-              alt="Google image"
-              width={25}
-              height={25}
-            />
-            <span> تسجيل بإستخدام جوجل</span>
+            {loading ? (
+              <BiLoaderAlt className="animate-spin" />
+            ) : (
+              <>
+                <Image
+                  src={"/images/google.png"}
+                  alt="Google image"
+                  width={25}
+                  height={25}
+                />
+                <span> تسجيل بإستخدام جوجل</span>
+              </>
+            )}
           </Button>
         </Field>
       </form>
