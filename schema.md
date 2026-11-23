@@ -86,6 +86,8 @@ The time zone is stored because "today", "tomorrow" and "1 day before 9 AM" only
 
 **Allowed values (enforced in the application, not by a database constraint):** the time zone must be one of the names in `TIME_ZONES` (`features/settings/schemas.ts`, Arab countries plus London, Paris, New York and UTC), because an invalid name makes `Intl` throw a `RangeError` on every page that formats a date. `reminder_days_before` is one of 0, 1, 2, 3, 7 and `reminder_hours_before` one of 0, 1, 2, 3, 6, 12, 24 (0 means no reminder of that kind). `getUserSettings()` throws if the row can neither be read nor created.
 
+**Reminders are on hold:** the two reminder columns here and the `reminder_*_sent_at` columns on `hearings` and `deadlines` stay unchanged, but nothing sends reminders for now (no verified sending domain) and the settings page hides the reminder card. They are kept so that bringing reminders back needs no migration.
+
 ---
 
 ## 3. action_rate_limits [x]
@@ -264,6 +266,7 @@ Files stay in private storage and are opened through short-lived signed links, g
 - **Reminder times are computed, not stored:** whether something is due is derived from `hearing_at` / `due_date`, `user_settings` and the current time in the lawyer's zone.
 - **`updated_at` on every table** is what lets the dashboard show recently updated cases.
 - **Enums instead of free text** for case type, case status, hearing type, hearing status and deadline status, so typos can never reach the database.
+- **Deleting an account** removes `hearings`, `deadlines`, `cases` and `clients` of the user in one `db.batch` (children first, there is no cascade between app tables) and then the user; `user_settings`, `session` and `account` go with the user by cascade.
 - **No duplicated data:** a client's name is never copied into `cases`, it is always read through the relationship.
 - **View state is never stored:** the page size, the search text, the filters, the archived tab and the open case tab live in the link only, so they cost no column and no table.
 - **Calculated values are never stored:** case count, last case, next hearing, urgent, active/inactive, paid, overdue and outstanding.
@@ -283,8 +286,9 @@ Files stay in private storage and are opened through short-lived signed links, g
 - Hard delete of a client with cases (or a case with hearings/deadlines) is blocked, archiving was added.
 - Hearings built as designed, plus the order rule, "edit only while scheduled" and a 90-minute conflict window.
 - Deadlines built as designed, plus "edit only while pending" and reopening.
-- Reminders built on the existing columns: no schema change.
+- Reminders built on the existing columns: no schema change. Later put on hold (no sending domain): still no schema change.
 - Client details page, "latest case" and active/inactive built as calculated values: no schema change.
+- Account settings (change password, delete account): no schema change and no migration.
 - UI redesign (case tabs, client stats, settings page, page size, loading skeletons): no schema change and no migration.
 
 ## Open questions

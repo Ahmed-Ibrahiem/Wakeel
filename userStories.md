@@ -98,8 +98,10 @@ Check each story off once it's fully built and working.
 - [ ] **As a** lawyer, **I want to** set how many days/hours before a hearing I get reminded, **so that** the reminders match how far ahead I like to prepare. `later` (built, but the card is hidden in the settings page until reminders can be sent)
 - [x] **As a** lawyer, **I want to** set my time zone, **so that** "today" and reminder times are correct for me. `v1` (changing it only changes how dates are shown, saved hearings keep their exact moment)
 - [x] **As a** lawyer, **I want to** reset my settings to the defaults in one click and see when I last saved them, **so that** I can undo experiments without remembering the original values. `v1` (the reset only fills the fields, nothing is saved until I press save)
-- [ ] **As a** lawyer, **I want to** change my password and my email, **so that** I can keep my account secure. `later`
-- [ ] **As a** lawyer, **I want to** delete my account and my data, **so that** I stay in control of client information. `later`
+- [x] **As a** lawyer, **I want to** change my password, **so that** I can keep my account secure. `v1` (needs the current password; every other device is signed out and this one stays; a Google-only account has no password and sees a short note instead)
+- [ ] **As a** lawyer, **I want to** change my email, **so that** I keep my account when my address changes. `later` (on hold: the confirmation link goes to the new address, which needs a verified sending domain)
+- [x] **As a** lawyer, **I want to** delete my account and my data, **so that** I stay in control of client information. `v1` (permanent and immediate: it removes the hearings, deadlines, cases, clients, settings and the account; it asks for the password and the word «حذف», and a Google-only account must have signed in within the last 10 minutes)
+- [x] **As a** lawyer, **I want to** be told when this device was signed out from somewhere else, **so that** I am not left looking at a page that no longer works. `v1` (a message appears when I come back to the tab, or within 5 minutes)
 
 ## 11. Smaller but Practical Items
 
@@ -134,14 +136,15 @@ All three are done for v1. They apply to everything, so they must be checked aga
 - [x] UI redesign of the form, details and settings pages (tabs on the case page, client page with stats, loading skeletons, user-chosen page size)
 - [x] Quality pass: isolation, phone layout, and empty / loading / error states on every screen (section 12)
 - [x] Deployed on Vercel (a push to `main` deploys automatically)
+- [x] Account settings: change password, delete account, notice when signed out elsewhere
 
 **v1.1** Billing: agreed fee, payments with due dates, overdue and outstanding widgets.
 
 **v1.2** Documents (private storage) and the full calendar.
 
-**On hold** Email reminders for hearings and deadlines. The code, the columns and the endpoint are ready; they wait for a verified sending domain (Resend only delivers to the account owner without one).
+**On hold** Email reminders for hearings and deadlines. The code, the columns and the endpoint are ready; they wait for a verified sending domain (Resend only delivers to the account owner without one). Changing the email address waits for the same domain.
 
-**Later** Invoices, global search, monthly reports, in-app notifications, case activity feed, conflict-of-interest check, call log, account settings.
+**Later** Invoices, global search, monthly reports, in-app notifications, case activity feed, conflict-of-interest check, call log.
 
 ---
 
@@ -175,5 +178,7 @@ All three are done for v1. They apply to everything, so they must be checked aga
 26. **Reminders are on hold.** A reminder email can only reach a lawyer from a verified sending domain, and there is no budget for a domain yet (Resend's test sender delivers only to the account owner). The code, the database columns and the secret-protected endpoint stay as they are, nothing calls the endpoint, and the reminder card is hidden in the settings page so the screen does not promise something that does not happen. Bringing it back needs a domain, one setting, the scheduler and showing the card again, with no migration.
 27. **Interface scale:** the pages were designed with the browser at 90%, so the root font size is set to 90% (`html { font-size: 90% }`) and every rem-based size follows it.
 28. **Adding a client from the case form:** a case always belongs to a client, so with no clients the new-case page shows a message and a button instead of an unusable form, and the form offers an "add a new client" link even when clients exist. The link carries a flag (`?from=case`, one fixed value, never a URL); after saving, the lawyer comes back to the case form with the new client selected. The client id in the link is used only if it is in the lawyer's own client list.
+29. **Account settings:** changing the password needs the current one, signs out every other device and keeps this session. Deleting the account is permanent and immediate (no grace period): it asks for the password plus the word «حذف»; an account without a password (Google) must have a session created in the last 10 minutes, otherwise it is asked to sign in again. Changing the email is on hold until there is a sending domain.
+30. **Signed out elsewhere:** a server-rendered page cannot know that its session was removed (password change, logout elsewhere, deleted account), so the dashboard checks the session when the tab becomes visible and every 5 minutes, and shows a message that cannot be dismissed, with a button to sign in again. No push connection: it would be far more complex for no real gain.
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).

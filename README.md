@@ -20,9 +20,11 @@ Lawyers often manage clients, case files, and — most critically — court hear
 - **Case card signals** — urgent badge, next hearing and nearest deadline directly on the card
 - **Dashboard** — today's and tomorrow's hearings, hearings that still have no decision, upcoming deadlines, caseload numbers and recently updated cases
 - **Settings** — time zone, saved per lawyer, with a one-click return to the defaults
+- **Account** — change password (other devices are signed out), delete account and all data permanently, and a notice on a device that was signed out from somewhere else
 
 **Planned**
 
+- **Change email** — waits for a verified sending domain (the confirmation goes to the new address)
 - **Email reminders** — built and tested (days and/or hours before a hearing, days before a deadline, in Modern Standard Arabic and in the lawyer's own time zone) but switched off until a verified sending domain exists
 - **Billing (v1.1)** — agreed fee per case, payments with due dates, overdue and outstanding widgets
 - **Documents and calendar (v1.2)** — file uploads in private storage opened through short-lived signed links, and a full calendar
@@ -53,6 +55,7 @@ Every lawyer's data is private to them, and the code is written to keep it that 
 - **Reminder endpoint:** protected by a secret compared in constant time, and it refuses everything when the secret is not configured.
 - **Emails:** text written by the lawyer is HTML-escaped before it goes into an email.
 - **Fixed lists:** the time zone and reminder options come from fixed lists, so a bad stored value can never break the pages that format dates.
+- **Sensitive account actions:** changing the password needs the current one and deleting the account needs the password (or a fresh sign-in for Google accounts); both are rate limited in the action and on Better Auth's own endpoints.
 - **Tested by attacking it:** each feature was tested with two accounts, other accounts' ids, hostile input, invalid states and request floods.
 
 ## Design Decisions
