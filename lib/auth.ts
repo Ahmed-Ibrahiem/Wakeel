@@ -8,6 +8,7 @@ import { after } from "next/server";
 import { emailLink } from "./emailTemplates";
 import { sendEmail } from "./email";
 import { checkRateLimits } from "./rateLimit";
+import { deleteAccountData } from "@/features/account/delete-data";
 
 type Mail = { to: string; subject: string; html: string; text: string };
 
@@ -56,6 +57,8 @@ export const auth = betterAuth({
       "/sign-up/email": { window: 60, max: 5 },
       "/request-password-reset": { window: 300, max: 3 },
       "/send-verification-email": { window: 300, max: 3 },
+      "/change-password": { window: 300, max: 5 },
+      "/delete-user": { window: 300, max: 3 },
     },
   },
 
@@ -117,6 +120,18 @@ export const auth = betterAuth({
     additionalFields: {
       phone: { type: "string", required: false, input: true },
     },
+    deleteUser: {
+      enabled: true,
+      // Runs before Better Auth removes the user; if it throws, nothing is deleted
+      beforeDelete: async (user) => {
+        await deleteAccountData(user.id);
+      },
+    },
+  },
+
+  session: {
+    // Sensitive actions (like deleting the account) need a session created in the last 10 minutes
+    freshAge: 60 * 10,
   },
 
   databaseHooks: {

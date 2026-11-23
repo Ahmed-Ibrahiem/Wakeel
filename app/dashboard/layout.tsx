@@ -1,5 +1,6 @@
 import { MobileNav } from "@/components/dashboard/MobileNav";
 import { SidebarContent } from "@/components/dashboard/SidebarContent";
+import { SessionWatcher } from "@/features/dashboard/components/SessionWatcher";
 import { requireSession } from "@/lib/session";
 import React from "react";
 
@@ -24,6 +25,8 @@ export default async function DashboardLayout({
           <span className="text-lg font-bold">وكيل</span>
         </header>
         <main className="flex-1 p-4">{children}</main>
+
+        <SessionWatcher />
       </div>
     </div>
   );

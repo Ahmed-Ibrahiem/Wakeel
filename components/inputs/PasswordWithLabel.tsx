@@ -3,14 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { useFormContext, Controller } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import { useState } from "react";
+import { InputHTMLAttributes, useState } from "react";
 
 type Props<S> = {
   fieldName: string;
   nameInSchema: keyof S & string;
   className?: string;
   disabled?: boolean;
-};
+} & InputHTMLAttributes<HTMLInputElement>;
 
 export function PasswordWithLabel<S>({
   fieldName,

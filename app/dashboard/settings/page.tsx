@@ -13,6 +13,9 @@ import {
   TIME_ZONES,
   type SettingsFormValues,
 } from "@/features/settings/schemas";
+import { hasPasswordLogin } from "@/features/account/queries";
+import { ChangePasswordForm } from "@/features/account/components/ChangePasswordForm";
+import { DeleteAccountSection } from "@/features/account/components/DeleteAccountSection";
 
 // A stored value outside the allowed list falls back to a default instead of an empty Select
 function pick<T extends readonly string[]>(
@@ -27,7 +30,10 @@ function pick<T extends readonly string[]>(
 
 const SettingsPage = async () => {
   const { user } = await requireSession();
-  const settings = await getUserSettings(user.id);
+  const [settings, hasPassword] = await Promise.all([
+    getUserSettings(user.id),
+    hasPasswordLogin(user.id),
+  ]);
 
   const initialValues: SettingsFormValues = {
     timeZone: pick(TIME_ZONES, settings.timeZone, DEFAULT_SETTINGS.timeZone),
@@ -58,7 +64,7 @@ const SettingsPage = async () => {
       <PageHeader
         icon={Settings}
         title="الإعدادات"
-        description="خصص مواعيد التذكير والمنطقة الزمنية بما يناسبك"
+        description="خصص المنطقة الزمنية وأدر أمان حسابك"
       />
 
       <SettingsForm
@@ -69,6 +75,10 @@ const SettingsPage = async () => {
       <p className="text-xs text-muted-foreground">
         آخر تحديث للإعدادات: {lastUpdated}
       </p>
+
+      <ChangePasswordForm hasPassword={hasPassword} />
+
+      <DeleteAccountSection hasPassword={hasPassword} />
     </div>
   );
 };
