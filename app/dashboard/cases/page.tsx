@@ -12,6 +12,7 @@ import { CasesFilters } from "@/features/cases/components/CasesFilters";
 import { CaseCard } from "@/features/cases/components/CaseCard";
 import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "@/lib/pagination";
 import { PageSizeSelect } from "@/components/shared/PageSizeSelect";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -72,14 +73,7 @@ const CasesPage = async ({ searchParams }: { searchParams: SearchParams }) => {
 
   return (
     <div className="animate-fade-in space-y-2">
-      <header>
-        <div>
-          <h1 className="text-2xl font-bold">القضايا</h1>
-          <p className="text-sm text-muted-foreground">
-            إدارة جميع القضايا الخاصة بك
-          </p>
-        </div>
-      </header>
+      <PageHeader title="القضايا" description="ادارة جميع القضايا الخاصة بك" />
 
       <div className="w-full flex-between gap-5 flex-wrap bg-white p-2.5 border rounded-sm">
         <CasesSearch q={q} />

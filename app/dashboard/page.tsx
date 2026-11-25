@@ -9,18 +9,17 @@ import {
 } from "@/features/dashboard/components/ScheduleSection";
 import { RecentCases } from "@/features/dashboard/components/RecentCases";
 import { DeadlinesPanel } from "@/features/dashboard/components/DeadlinesPanel";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 const DashboardPage = () => {
   return (
     <div className="flex-col-start gap-2.5 h-full w-full">
-      <header className="w-full animate-fade-in">
-        <h1 className="text-2xl font-bold">الرئيسية</h1>
-        <p className="text-sm text-muted-foreground">
-          مرحباً بك في لوحة التحكم الخاصة بك
-        </p>
-      </header>
+      <PageHeader
+        title="الرئيسية"
+        description=" مرحباً بك في لوحة التحكم الخاصة بك"
+      />
 
-      <Suspense fallback={<StatsSkeleton />} >
+      <Suspense fallback={<StatsSkeleton />}>
         <DashboardStats />
       </Suspense>
 

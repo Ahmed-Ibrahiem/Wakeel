@@ -25,7 +25,7 @@ export async function DeadlinesPanel() {
       <h2 className="flex items-center gap-2 text-lg font-bold">
         <AlarmClock className="size-5 text-primary" aria-hidden />
         المواعيد النهائية
-      </h2>
+      </h2> 
 
       {items.length === 0 ? (
         <div className="flex-col-center gap-3 w-full grow text-muted-foreground">
@@ -33,7 +33,7 @@ export async function DeadlinesPanel() {
           <p className="text-center text-sm ">لا يوجد مواعيد نهائية معلّقة.</p>
         </div>
       ) : (
-        <ul className="divide-y w-full">
+        <ul className="divide-y w-full xl:h-37 xl:overflow-y-auto pe-1.5">
           {items.map((d) => {
             const days = daysBetween(today, d.dueDate);
             const overdue = days < 0;

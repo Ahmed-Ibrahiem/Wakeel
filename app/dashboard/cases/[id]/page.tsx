@@ -15,6 +15,7 @@ import { CaseTabs } from "@/features/cases/components/CaseTabs";
 import { HearingsSection } from "@/features/hearings/components/HearingsSection";
 import { DeadlinesSection } from "@/features/deadlines/components/DeadlinesSection";
 import { CaseOverviewSkeleton } from "@/features/cases/components/CaseOverviewSkeleton";
+import { CaseRowActions } from "@/features/cases/components/CaseRowActions";
 
 type Params = Promise<{ id: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -60,12 +61,20 @@ export default async function CaseDetailsPage({
           )}
         </div>
 
-        <Button asChild className="rounded-sm! text-[16px] h-9">
-          <Link href={`/dashboard/cases/${item.id}/edit`}>
-            <Pencil className="size-4" />
-            تعديل
-          </Link>
-        </Button>
+        <div className="flex-start gap-2">
+          <Button asChild className="rounded-sm! text-sm h-9">
+            <Link href={`/dashboard/cases/${item.id}/edit`}>
+              <Pencil className="size-4" />
+              تعديل
+            </Link>
+          </Button>
+          <CaseRowActions
+            id={item.id}
+            number={item.caseNumber}
+            archived={Boolean(item.archivedAt)}
+            redirectAfterDelete="/dashboard/cases"
+          />
+        </div>
       </header>
 
       <CaseSummaryStrip

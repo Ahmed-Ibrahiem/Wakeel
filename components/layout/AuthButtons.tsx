@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { homePage } from "@/data/Ar";
+import DemoButton from "@/features/demo/components/DemoButton";
 import Link from "next/link";
 
 const AuthButtons = () => {
@@ -14,6 +15,7 @@ const AuthButtons = () => {
       <Button variant={"secondary"}>
         <Link href={"/register"}>{content.startNow}</Link>
       </Button>
+      <DemoButton />
     </div>
   );
 };

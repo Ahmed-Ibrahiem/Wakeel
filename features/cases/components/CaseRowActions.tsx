@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { archiveCase, deleteCase, restoreCase } from "../actions";
+import { useRouter } from "next/navigation";
 
 type Dialog = "archive" | "delete" | null;
 
@@ -37,11 +38,14 @@ export function CaseRowActions({
   id,
   number,
   archived,
+  redirectAfterDelete,
 }: {
   id: string;
   number: string;
   archived: boolean;
+  redirectAfterDelete?: string;
 }) {
+  const router = useRouter();
   const [dialog, setDialog] = useState<Dialog>(null);
   const [pending, startTransition] = useTransition();
 
@@ -76,6 +80,10 @@ export function CaseRowActions({
       }
       toast.success(current.success);
       setDialog(null);
+      // Only a delete leaves the current page without a record
+      if (dialog === "delete" && redirectAfterDelete) {
+        router.replace(redirectAfterDelete);
+      }
     });
   };
 

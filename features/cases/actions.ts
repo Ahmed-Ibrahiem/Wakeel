@@ -182,6 +182,7 @@ export async function archiveCase(id: string) {
   if (!row) return fail(NOT_FOUND);
 
   revalidatePath("/dashboard/cases");
+  revalidatePath(`/dashboard/cases/${id}`);
   return { success: true as const };
 }
 
@@ -209,6 +210,7 @@ export async function restoreCase(id: string) {
   if (!row) return fail(NOT_FOUND);
 
   revalidatePath("/dashboard/cases");
+  revalidatePath(`/dashboard/cases/${id}`);
   return { success: true as const };
 }
 

@@ -167,7 +167,7 @@ export async function CaseOverview({
                     <TableCell>
                       <span
                         className={cn(
-                          "rounded-full px-3 py-1 text-sm font-medium",
+                          "rounded-full px-3 py-0.5 text-xs font-semibold",
                           HEARING_STATUS_STYLES[h.status],
                         )}
                       >

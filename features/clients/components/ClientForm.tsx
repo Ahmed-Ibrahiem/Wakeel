@@ -61,6 +61,13 @@ export function ClientForm({
     );
   };
 
+  // Edit mode: return to wherever the lawyer came from (details page, list, ...).
+  // If the page was opened directly there is no history, so fall back to the list.
+  const handleCancelEdit = () => {
+    if (window.history.length > 1) router.back();
+    else router.push("/dashboard/clients");
+  };
+
   return (
     <FormProvider {...form}>
       <form
@@ -122,14 +129,26 @@ export function ClientForm({
             )}
             {isEdit ? "حفظ التعديلات" : "حفظ العميل"}
           </Button>
-          <Button asChild variant="outline" className="rounded-sm! h-10">
-            <Link
-              href={fromCase ? "/dashboard/cases/new" : "/dashboard/clients"}
+          {isEdit ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-sm! h-10"
+              onClick={handleCancelEdit}
             >
               <X className="size-4" />
               إلغاء
-            </Link>
-          </Button>
+            </Button>
+          ) : (
+            <Button asChild variant="outline" className="rounded-sm! h-10">
+              <Link
+                href={fromCase ? "/dashboard/cases/new" : "/dashboard/clients"}
+              >
+                <X className="size-4" />
+                إلغاء
+              </Link>
+            </Button>
+          )}
         </div>
       </form>
     </FormProvider>

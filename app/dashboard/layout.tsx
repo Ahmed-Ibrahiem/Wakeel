@@ -3,6 +3,8 @@ import { SidebarContent } from "@/components/dashboard/SidebarContent";
 import { SessionWatcher } from "@/features/dashboard/components/SessionWatcher";
 import { requireSession } from "@/lib/session";
 import React from "react";
+import { isDemoUser } from "@/features/demo/constants";
+import DemoBanner from "@/features/demo/components/DemoBanner";
 
 export default async function DashboardLayout({
   children,
@@ -24,6 +26,7 @@ export default async function DashboardLayout({
           <MobileNav name={user.name} />
           <span className="text-lg font-bold">وكيل</span>
         </header>
+        {isDemoUser(user.id) && <DemoBanner />}
         <main className="flex-1 p-4">{children}</main>
 
         <SessionWatcher />

@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { ClientsTabs } from "@/features/clients/components/ClientsTabs";
 import { DEFAULT_PAGE_SIZE, PAGE_SIZES } from "@/lib/pagination";
 import { PageSizeSelect } from "@/components/shared/PageSizeSelect";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -77,14 +78,10 @@ const ClientsPage = async ({
 
   return (
     <div className="animate-fade-in space-y-2.5">
-      <header className="flex-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">العملاء</h1>
-          <p className="text-sm text-muted-foreground">
-            إدارة بيانات العملاء بشكل منظم وسهل
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="العملاء"
+        description=" إدارة بيانات العملاء بشكل منظم وسهل"
+      />
 
       <div className="w-full flex-between gap-5 flex-wrap bg-white p-2.5 border rounded-sm">
         <ClientsSearch q={q} />

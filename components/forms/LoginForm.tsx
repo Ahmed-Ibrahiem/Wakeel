@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { PasswordWithLabel } from "../inputs/PasswordWithLabel";
 import { Button } from "../ui/button";
 import { Field, FieldSeparator } from "../ui/field";
+import DemoButton from "@/features/demo/components/DemoButton";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -124,6 +125,8 @@ const LoginForm = () => {
             )}
           </Button>
         </Field>
+
+        <DemoButton className="text-[16px] h-12" />
       </form>
     </FormProvider>
   );

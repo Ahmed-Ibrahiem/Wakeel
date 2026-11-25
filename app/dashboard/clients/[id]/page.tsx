@@ -12,6 +12,8 @@ import { ClientRowActions } from "@/features/clients/components/ClientRowActions
 import { ClientStats } from "@/features/clients/components/ClientStats";
 import { requireSession } from "@/lib/session";
 import { getUserSettings } from "@/lib/userSettings";
+import { PageHeader } from "@/components/shared/PageHeader";
+
 
 type Params = Promise<{ id: string }>;
 
@@ -44,23 +46,24 @@ export default async function ClientDetailsPage({
         ]}
       />
 
-      <header className="flex-start flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">تفاصيل العميل</h1>
-        <Button asChild className="rounded-sm!">
-          <Link href={`/dashboard/clients/${client.id}/edit`}>
-            <Pencil className="size-4" />
-            تعديل بيانات العميل
-          </Link>
-        </Button>
-        <div className="flex-start rounded-sm border bg-background p-0.5">
-          <ClientRowActions
-            id={client.id}
-            name={client.fullName}
-            archived={archived}
-            afterDeleteHref="/dashboard/clients"
-          />
+      <PageHeader title="تفاصيل العميل">
+        <div className="flex-start gap-3">
+          <Button asChild className="rounded-sm! h-10">
+            <Link href={`/dashboard/clients/${client.id}/edit`}>
+              <Pencil className="size-4" />
+              تعديل بيانات العميل
+            </Link>
+          </Button>
+          <div className="flex-start rounded-sm border bg-background p-0.5">
+            <ClientRowActions
+              id={client.id}
+              name={client.fullName}
+              archived={archived}
+              afterDeleteHref="/dashboard/clients"
+            />
+          </div>
         </div>
-      </header>
+      </PageHeader>
 
       <ClientProfileCard
         fullName={client.fullName}

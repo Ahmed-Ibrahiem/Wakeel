@@ -8,9 +8,13 @@ import { limitMessage, limitedPerHour } from "@/lib/rateLimit";
 import { fail, GENERIC_ERROR } from "@/lib/action-result";
 import { hasPasswordLogin } from "./queries";
 import { changePasswordSchema, deleteAccountSchema } from "./schemas";
+import { isDemoUser } from "../demo/constants";
 
 export async function changePassword(input: unknown) {
   const { user } = await requireSession(); // outside try/catch on purpose
+
+  if (isDemoUser(user.id))
+    return fail("هذا الإجراء غير متاح في الحساب التجريبي");
 
   const parsed = changePasswordSchema.safeParse(input);
   if (!parsed.success) return fail("البيانات غير صالحة");
@@ -52,6 +56,9 @@ export async function changePassword(input: unknown) {
 
 export async function deleteAccount(input: unknown) {
   const { user } = await requireSession(); // outside try/catch on purpose
+
+  if (isDemoUser(user.id))
+    return fail("هذا الإجراء غير متاح في الحساب التجريبي");
 
   const parsed = deleteAccountSchema.safeParse(input);
   if (!parsed.success) return fail("البيانات غير صالحة");
