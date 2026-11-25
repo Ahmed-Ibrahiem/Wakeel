@@ -66,6 +66,8 @@ Extra column on `user`:
 
 The password hash lives in `account.password`, never in `user`.
 
+**Demo user:** one fixed row (`id = 'demo-user'`, email `demo@wakeel.example`) owns the sample data shown to portfolio visitors. It is inserted by `ensureDemoUser`, has a credential `account` row with a random server-side password, and its clients, cases, hearings and deadlines are deleted and recreated on every entry (`resetDemoData`). No schema change.
+
 ---
 
 ## 2. user_settings [x]

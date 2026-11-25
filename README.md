@@ -4,6 +4,10 @@ A SaaS-style case, client, and deadline management system built for lawyers runn
 
 > **Note:** "Wakeel" is a placeholder name — update this if a different name is chosen.
 
+## Live demo
+
+Try it without signing up: <https://wakeel-lac.vercel.app> and press «جرّب النسخة التجريبية». The demo is a shared account with invented data, reset on every entry.
+
 ## The Problem
 
 Lawyers often manage clients, case files, and — most critically — court hearing dates across scattered tools: WhatsApp, paper notes, memory. A single missed hearing or filing deadline can permanently harm a case. Wakeel centralizes this into one system with proactive email reminders and scheduling-conflict detection.
@@ -20,6 +24,7 @@ Lawyers often manage clients, case files, and — most critically — court hear
 - **Case card signals** — urgent badge, next hearing and nearest deadline directly on the card
 - **Dashboard** — today's and tomorrow's hearings, hearings that still have no decision, upcoming deadlines, caseload numbers and recently updated cases
 - **Settings** — time zone, saved per lawyer, with a one-click return to the defaults
+- **Demo account** — visitors can try the app with realistic sample data in one click; the data is reset on every entry and the account cannot be changed or deleted
 - **Account** — change password (other devices are signed out), delete account and all data permanently, and a notice on a device that was signed out from somewhere else
 
 **Planned**
@@ -55,6 +60,7 @@ Every lawyer's data is private to them, and the code is written to keep it that 
 - **Reminder endpoint:** protected by a secret compared in constant time, and it refuses everything when the secret is not configured.
 - **Emails:** text written by the lawyer is HTML-escaped before it goes into an email.
 - **Fixed lists:** the time zone and reminder options come from fixed lists, so a bad stored value can never break the pages that format dates.
+- **Demo account:** its password is a random server-side secret, entering it is rate limited per IP, and changing its password or deleting it is refused.
 - **Sensitive account actions:** changing the password needs the current one and deleting the account needs the password (or a fresh sign-in for Google accounts); both are rate limited in the action and on Better Auth's own endpoints.
 - **Tested by attacking it:** each feature was tested with two accounts, other accounts' ids, hostile input, invalid states and request floods.
 
@@ -108,7 +114,10 @@ GOOGLE_CLIENT_SECRET=
 RESEND_API_KEY=
 EMAIL_FROM=
 CRON_SECRET=
+DEMO_PASSWORD=
 ```
+
+`DEMO_PASSWORD` is a long random secret used by the demo account (`node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"`). Without it the demo button shows an error.
 
 Without `RESEND_API_KEY`, emails are printed in the terminal during development.
 

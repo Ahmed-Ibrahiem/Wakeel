@@ -17,6 +17,7 @@ Check each story off once it's fully built and working.
 
 ## 2. Landing Page
 
+- [x] **As a** visitor, **I want to** try the app with sample data without signing up, **so that** I can judge it in a minute. `v1` (one shared demo account, reset to fresh sample data on every entry; a banner says the data is not real; changing its password or deleting it is blocked)
 - [x] **As a** visitor, **I want to** see a simple landing page that explains what the system is and what it does, **so that** I understand it before I sign up. `v1`
 
 ## 3. Dashboard Home
@@ -52,7 +53,7 @@ Check each story off once it's fully built and working.
 - [x] **As a** lawyer, **I want to** see a case marked **urgent** when it has a hearing or deadline within 48 hours, **so that** I notice it without checking dates. `v1`
 - [x] **As a** lawyer, **I want to** be warned when an ongoing case has no upcoming hearing, **so that** I don't forget to schedule the next session. `v1`
 - [x] **As a** lawyer who opens "new case" before adding any client, **I want to** be told to add a client first, and to add one from the case form and come back with that client already chosen, **so that** I am never stuck on an empty picker. `v1` (with no clients the page shows a message and an "add client" button instead of the form; the case form also has an "add a new client" link; after saving the client the lawyer returns to the case form with the client selected)
-- [x] **As a** lawyer, **I want to** edit, archive or delete a case (delete only when it has no hearings or deadlines), **so that** my list stays accurate. `v1`
+- [x] **As a** lawyer, **I want to** edit, archive or delete a case (delete only when it has no hearings or deadlines), **so that** my list stays accurate. `v1` The same actions are available on the case's own page; deleting there returns to the list.
 
 > "Urgent" is calculated from upcoming dates. It is not a status and not a field the lawyer fills in. A case is urgent when its earliest scheduled hearing is within 48 hours **or already past without a decision**, or when a pending deadline is due within 2 days **or already overdue**. Closed and archived cases are never urgent.
 >
@@ -137,6 +138,7 @@ All three are done for v1. They apply to everything, so they must be checked aga
 - [x] Quality pass: isolation, phone layout, and empty / loading / error states on every screen (section 12)
 - [x] Deployed on Vercel (a push to `main` deploys automatically)
 - [x] Account settings: change password, delete account, notice when signed out elsewhere
+- [x] Demo account for portfolio visitors (button on the login page and the landing page)
 
 **v1.1** Billing: agreed fee, payments with due dates, overdue and outstanding widgets.
 
@@ -180,5 +182,6 @@ All three are done for v1. They apply to everything, so they must be checked aga
 28. **Adding a client from the case form:** a case always belongs to a client, so with no clients the new-case page shows a message and a button instead of an unusable form, and the form offers an "add a new client" link even when clients exist. The link carries a flag (`?from=case`, one fixed value, never a URL); after saving, the lawyer comes back to the case form with the new client selected. The client id in the link is used only if it is in the lawyer's own client list.
 29. **Account settings:** changing the password needs the current one, signs out every other device and keeps this session. Deleting the account is permanent and immediate (no grace period): it asks for the password plus the word «حذف»; an account without a password (Google) must have a session created in the last 10 minutes, otherwise it is asked to sign in again. Changing the email is on hold until there is a sending domain.
 30. **Signed out elsewhere:** a server-rendered page cannot know that its session was removed (password change, logout elsewhere, deleted account), so the dashboard checks the session when the tab becomes visible and every 5 minutes, and shows a message that cannot be dismissed, with a button to sign in again. No push connection: it would be far more complex for no real gain.
+31. **Demo account:** one shared account that is reset to fresh sample data on every entry, instead of one account per visitor: no signup, no cleanup job, no growth of the database. The sample dates are relative to today so the dashboard always has something to show. Visitors at the same time can overwrite each other's edits, which the banner warns about.
 
 Anything that can be calculated from other data is never stored (case count, last case, next hearing, overdue amount, active/inactive, urgent).
