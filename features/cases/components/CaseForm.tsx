@@ -147,7 +147,7 @@ export function CaseForm({
                 className="py-5!"
               />
               {!isEdit && (
-                <p className="mt-3 text-sm text-muted-foreground">
+                <p className="mt-5 text-sm text-muted-foreground">
                   الموكل غير موجود في القائمة؟{" "}
                   <Link
                     href="/dashboard/clients/new?from=case"
