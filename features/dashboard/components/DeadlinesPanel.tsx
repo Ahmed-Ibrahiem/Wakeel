@@ -33,7 +33,7 @@ export async function DeadlinesPanel() {
           <p className="text-center text-sm ">لا يوجد مواعيد نهائية معلّقة.</p>
         </div>
       ) : (
-        <ul className="divide-y w-full xl:h-37 xl:overflow-y-auto pe-1.5">
+        <ul className="divide-y w-full xl:h-40 xl:overflow-y-auto pe-1.5">
           {items.map((d) => {
             const days = daysBetween(today, d.dueDate);
             const overdue = days < 0;

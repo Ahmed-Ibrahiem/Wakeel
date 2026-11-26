@@ -91,7 +91,7 @@ const CasesPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         emptyState()
       ) : (
         <>
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {items.map((item) => (
               <CaseCard
                 key={item.id}

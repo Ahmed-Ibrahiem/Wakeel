@@ -17,14 +17,14 @@ export async function PageHeader({
 }) {
   const { user } = await requireSession();
   return (
-    <header className="flex-between gap-3 flex-wrap w-full">
+    <header className="flex-between gap-5 flex-wrap w-full">
       <div className="flex-start gap-3">
         {Icon && (
           <span className="flex-center size-13 shrink-0 rounded-lg bg-secondary text-primary">
             <Icon className="size-7" aria-hidden />
           </span>
         )}
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <h1 className="text-2xl font-bold">{title}</h1>
           {description && (
             <p className="text-sm text-muted-foreground">{description}</p>

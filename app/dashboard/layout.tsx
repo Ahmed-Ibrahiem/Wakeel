@@ -27,7 +27,7 @@ export default async function DashboardLayout({
           <span className="text-lg font-bold">وكيل</span>
         </header>
         {isDemoUser(user.id) && <DemoBanner />}
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1 p-3">{children}</main>
 
         <SessionWatcher />
       </div>

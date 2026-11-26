@@ -38,7 +38,7 @@ function Field({
       <p className="text-xs text-muted-foreground">{label}</p>
       <p
         className={cn(
-          "text-sm font-medium wrap-break-word",
+          "text-sm font-medium wrap-break-word line-clamp-1",
           danger && "text-red-700",
         )}
       >
@@ -68,7 +68,7 @@ export function CaseCard({
             <Briefcase className="size-5 text-primary" aria-hidden />
             <div>
               <p className="text-xs text-muted-foreground">رقم القضية</p>
-              <p className="font-bold" dir="ltr">
+              <p className="font-bold line-clamp-1" dir="ltr">
                 {item.caseNumber}
               </p>
             </div>

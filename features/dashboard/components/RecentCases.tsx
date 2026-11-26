@@ -39,7 +39,7 @@ export async function RecentCases() {
           </div>
         </div>
       ) : (
-        <ul className="divide-y xl:max-h-full xl:h-37 xl:overflow-y-auto pe-1.5 w-full">
+        <ul className="divide-y xl:max-h-full xl:h-40 xl:overflow-y-auto pe-1.5 w-full">
           {items.map((c) => (
             <li key={c.id}>
               <Link
