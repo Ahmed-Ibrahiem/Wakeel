@@ -2,15 +2,26 @@
 
 A SaaS-style case, client, and deadline management system built for lawyers running a small-to-medium practice. Built as a portfolio project to demonstrate a production-grade Next.js + relational database application, with a right-to-left Arabic interface.
 
-> **Note:** "Wakeel" is a placeholder name — update this if a different name is chosen.
-
 ## Live demo
 
-Try it without signing up: <https://wakeel-lac.vercel.app> and press «جرّب النسخة التجريبية». The demo is a shared account with invented data, reset on every entry.
+Try it without signing up: <https://wakeel-lac.vercel.app> and press «جرّب النسخة التجريبية». The demo is a shared account with invented data, reset on every entry, so do not enter real information.
+
+## Screenshots
+
+The interface is in Arabic and laid out right-to-left. All data below is invented.
+
+| | |
+|---|---|
+| ![Landing page](docs/screenshots/landing_page.png) | ![Dashboard](docs/screenshots/dashboard.png) |
+| **Landing page** | **Dashboard** — today's and tomorrow's hearings, a possible-conflict warning, hearings with no decision, deadlines |
+| ![Cases](docs/screenshots/cases.png) | ![Case details](docs/screenshots/case_details.png) |
+| **Cases** — cards with an urgent badge, next hearing and nearest deadline, paginated | **Case details** — tabs for overview, hearings, deadlines and notes |
+| ![Clients](docs/screenshots/clients.png) | ![Client details](docs/screenshots/client_details.png) |
+| **Clients** — search, active / inactive status, latest case | **Client details** — summary numbers and the client's cases |
 
 ## The Problem
 
-Lawyers often manage clients, case files, and — most critically — court hearing dates across scattered tools: WhatsApp, paper notes, memory. A single missed hearing or filing deadline can permanently harm a case. Wakeel centralizes this into one system with proactive email reminders and scheduling-conflict detection.
+Lawyers often manage clients, case files, and — most critically — court hearing dates across scattered tools: WhatsApp, paper notes, memory. A single missed hearing or filing deadline can permanently harm a case. Wakeel centralizes this into one system: clients, cases, hearings and deadlines in one place, with urgency signals and scheduling-conflict detection (email reminders are built and waiting for a sending domain).
 
 ## Features
 
@@ -83,13 +94,12 @@ Sending to people other than the Resend account owner requires a verified sendin
 
 ## Project Status
 
-v1 is built, tested and deployed on Vercel. Email reminders are on hold until a sending domain is available. Before real lawyers use it: a clean production database, the pre-launch checklist (security headers, secrets handling, privacy and terms pages), and then billing (v1.1).
+v1 is built, tested and deployed on Vercel, with a public demo account. Email reminders and change email are on hold until a sending domain is available. Before real lawyers use it: a clean production database, the pre-launch checklist (security headers, secrets handling, privacy and terms pages), and then billing (v1.1).
 
 ## Documentation
 
 - [`userStories.md`](./userStories.md) — full feature breakdown by actor
 - [`schema.md`](./schema.md) — database schema and design rationale
-- [`PROJECT_CONTEXT.md`](./PROJECT_CONTEXT.md) — architecture, behaviour of each feature, conventions and gotchas
 
 ## Future Features (Post-MVP)
 
