@@ -104,7 +104,7 @@ export const homePage = {
       },
       {
         id: 2,
-        title: "تنبيهين",
+        title: "تنبيه",
         description: "قبل كل جلسة (يوم وساعات)",
         iconName: "FaBell",
       },
